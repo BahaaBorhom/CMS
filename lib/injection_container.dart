@@ -12,13 +12,13 @@ import 'package:cms/features/auth/presentation/cubit/language_cubit.dart';
 final getIt = GetIt.instance;
 
 Future<void> init() async {
-  // Make sure that auth inject is initialized
-  initAuthInjection();
 
-  // First, initialize SharedPreferences
+
+  // ✅ 1. First, initialize SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
 
+  // ✅ 2. Now register Auth main dependencies (language-related)
   // Data sources - now pass SharedPreferences
   getIt.registerLazySingleton<LanguageLocalDataSource>(
     () => LanguageLocalDataSource(sharedPreferences: getIt()),
@@ -42,4 +42,8 @@ Future<void> init() async {
       saveLanguageUseCase: getIt(),
     ),
   );
+
+  // ✅ 3. Finally, initialize auth-specific injections
+  // (LoginCubit, OtpCubit, AuthLocalDataSource, etc.)
+  initAuthInjection();
 }
