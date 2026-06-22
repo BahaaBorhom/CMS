@@ -2,11 +2,12 @@ import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/theme/app_colors.dart';
 import 'package:cms/core/widgets/page_indicator.dart';
+import 'package:cms/features/auth/data/data_sources/local/auth_local_data_source.dart';
 import 'package:flutter/material.dart';
 
 class OnBordingScreen extends StatelessWidget {
-  const OnBordingScreen({super.key});
   static const routeName = "/onbording";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +32,6 @@ class OnBordingScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Left arrow
                       IconButton(
                         onPressed: () {},
                         icon: const Icon(Icons.arrow_back),
@@ -43,14 +43,12 @@ class OnBordingScreen extends StatelessWidget {
                           fixedSize: const Size(40, 40),
                         ),
                       ),
-                      // three dots to tell part I am at
                       PageIndicator(
-                        currentPage: 2,
+                        currentPage: 1,
                         totalPages: 3,
                         dotSize: 8,
                         selectedDotSize: 12,
                       ),
-                      // Right arrow
                       IconButton(
                         onPressed: () {},
                         icon: const Icon(Icons.arrow_forward),
@@ -65,7 +63,10 @@ class OnBordingScreen extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    final localDataSource = AuthLocalDataSource();
+                    await localDataSource.setOnboardingCompleted();
+
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       '/welcome',
@@ -93,7 +94,7 @@ class OnBordingScreen extends StatelessWidget {
             padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
             child: Column(
               children: [
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Container(
@@ -101,15 +102,15 @@ class OnBordingScreen extends StatelessWidget {
                       height: 32,
                       child: Image.asset(Assets.assetsImagesCross),
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Text(
                   "Every doctor you need in one place",
                   style: FontHeading.heading1,
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   "Some splash text in here depending on what we decide later",
                   style: FontHeading.bodyLarge,
@@ -121,7 +122,7 @@ class OnBordingScreen extends StatelessWidget {
             child: Align(
               alignment: Alignment.topCenter,
               child: Transform.translate(
-                offset: Offset(0, -50),
+                offset: const Offset(0, -50),
                 child: Image.asset(
                   Assets.assetsImagesDoctorImg,
                   fit: BoxFit.fill,
@@ -135,6 +136,3 @@ class OnBordingScreen extends StatelessWidget {
     );
   }
 }
-
-
-// 138 for right an 53 for left

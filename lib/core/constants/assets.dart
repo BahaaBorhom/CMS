@@ -13,5 +13,9 @@ class Assets {
   /// Assets for assetsImagesDoctorImg
   /// assets/images/doctor_img.png
   static const String assetsImagesDoctorImg = "assets/images/doctor_img.png";
+
+  /// Assets for assetsImagesGlobe
+  /// assets/images/globe.png
+  static const String assetsImagesGlobe = "assets/images/globe.png";
 }
 

@@ -1,24 +1,16 @@
-import '../../injection_container.dart';
-import 'data/data_sources/remote/auth_remote_data_source.dart';
-import 'data/repositories/auth_repository_impl.dart';
-import 'domain/repositories/auth_repository.dart';
-import 'domain/use_cases/auth_use_case.dart';
-import 'presentation/cubit/auth_cubit.dart';
+// lib/features/auth/injection_container.dart
+import 'package:get_it/get_it.dart';
+import 'data/data_sources/local/auth_local_data_source.dart';
+import 'domain/use_cases/check_onboarding_use_case.dart';
+import 'domain/use_cases/complete_onboarding_use_case.dart';
 
-//call this function in ServiceLocator.setup() function
-injectAuth() {
-  // cubit
-  getIt.registerFactory(() => AuthCubit(authUseCase: getIt()));
+final sl = GetIt.instance;
 
-  // Repository
-  getIt.registerLazySingleton<AuthRepository>(
-          () => AuthRepositoryImpl(remoteDataSource: getIt()));
-
-  // UseCases
-  getIt.registerLazySingleton(() => AuthUseCase(getIt()));
-
-  // DataSources
-  getIt.registerLazySingleton<AuthRemoteDataSource>(
-          () => AuthRemoteDataSourceImpl());
+void initAuthInjection() {
+  // Data sources
+  sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSource());
+  
+  // Use cases
+  sl.registerLazySingleton(() => CheckOnboardingUseCase(sl()));
+  sl.registerLazySingleton(() => CompleteOnboardingUseCase(sl()));
 }
-      

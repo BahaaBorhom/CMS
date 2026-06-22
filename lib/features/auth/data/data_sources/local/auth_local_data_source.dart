@@ -1,18 +1,17 @@
-import 'package:dartz/dartz.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+// lib/features/auth/data/data_sources/local/auth_local_data_source.dart
 
-abstract class AuthLocalDataSource {
-  Future<Unit> getFromLocalDataBase();
-}
-
-class AuthLocalDataSourceImpl implements AuthLocalDataSource {
-  AuthLocalDataSourceImpl();
-
-  @override
-  Future<Unit> getFromLocalDataBase() async {
-    // send api request here
-    return Future.value(unit);
+class AuthLocalDataSource {
+  Future<void> setOnboardingCompleted() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_completed', true);
   }
 
-}
+  Future<bool> isOnboardingCompleted() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('onboarding_completed') ?? false;
+  }
   
+  // Your existing methods...
+}

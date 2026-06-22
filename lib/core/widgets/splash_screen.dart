@@ -2,7 +2,9 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/features/auth/data/data_sources/local/auth_local_data_source.dart';
 import 'package:cms/features/auth/presentation/screens/on_bording_screen.dart';
+import 'package:cms/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -13,18 +15,47 @@ class SplashScreen extends StatelessWidget {
     return AnimatedSplashScreen(
       splash: Column(
         children: [
-          SizedBox(height: 200),
+          const SizedBox(height: 200),
           Image.asset(Assets.assetsImagesCross, height: 92, width: 92),
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
           Text("Project Name", style: FontHeading.heading1),
         ],
       ),
       duration: 3000,
       splashIconSize: 500,
-
-      nextScreen: OnBordingScreen(),
+      nextScreen: const NavigationDecider(), // Use a wrapper
       splashTransition: SplashTransition.fadeTransition,
       backgroundColor: AppColors.main_background_blue,
     );
+  }
+}
+
+// Wrapper to decide which screen to show
+class NavigationDecider extends StatelessWidget {
+  const NavigationDecider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _checkOnboardingStatus(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        
+        if (snapshot.data == true) {
+          return const WelcomeScreen();
+        } else {
+          return  OnBordingScreen();
+        }
+      },
+    );
+  }
+
+  Future<bool> _checkOnboardingStatus() async {
+    final localDataSource = AuthLocalDataSource();
+    return await localDataSource.isOnboardingCompleted();
   }
 }

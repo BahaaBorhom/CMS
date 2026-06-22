@@ -55,6 +55,7 @@ dependencies:
   clean_architecture_with_state_management: ^1.3.0
   sensors_plus: ^7.0.0
   easy_radio: ^0.0.3
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:
