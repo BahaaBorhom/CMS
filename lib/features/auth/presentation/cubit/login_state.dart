@@ -4,25 +4,30 @@ class LoginState {
   final String? phoneError;
   final bool isValid;
   final bool isLoading;
+  final bool shouldNavigateToOtp; // 👈 new flag
 
   const LoginState({
     this.phoneNumber = '',
     this.phoneError,
     this.isValid = false,
     this.isLoading = false,
+    this.shouldNavigateToOtp = false,
   });
+
 
   LoginState copyWith({
     String? phoneNumber,
     String? phoneError,
     bool? isValid,
     bool? isLoading,
+    bool? shouldNavigateToOtp,
   }) {
     return LoginState(
       phoneNumber: phoneNumber ?? this.phoneNumber,
       phoneError: phoneError,
       isValid: isValid ?? this.isValid,
       isLoading: isLoading ?? this.isLoading,
+      shouldNavigateToOtp: shouldNavigateToOtp ?? this.shouldNavigateToOtp,
     );
   }
 }

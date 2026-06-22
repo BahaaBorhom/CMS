@@ -3,6 +3,7 @@ import 'package:cms/features/auth/data/data_sources/local/language_data_source.d
 import 'package:cms/features/auth/data/repositories/language_repository_imp.dart';
 import 'package:cms/features/auth/domain/use_cases/change_language_use_case.dart';
 import 'package:cms/features/auth/presentation/cubit/login_cubit.dart';
+import 'package:cms/features/auth/presentation/cubit/otp_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cms/features/auth/domain/repositories/language_repository.dart';
@@ -41,4 +42,6 @@ Future<void> init() async {
   );
 
   getIt.registerFactory<LoginCubit>(() => LoginCubit());
+
+  getIt.registerFactory<OtpCubit>(() => OtpCubit());
 }

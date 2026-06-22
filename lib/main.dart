@@ -23,10 +23,11 @@ class MyApp extends StatelessWidget {
         '/auth': (context) => const AuthScreen(),
         '/onboarding': (context) => OnBordingScreen(),
         '/login': (context) => const LoginScreen(),
+        // '/otp' is NOT here – it needs a parameter (phoneNumber)
       },
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
