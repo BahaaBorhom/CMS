@@ -2,8 +2,7 @@
 import 'package:cms/features/auth/data/data_sources/local/language_data_source.dart';
 import 'package:cms/features/auth/data/repositories/language_repository_imp.dart';
 import 'package:cms/features/auth/domain/use_cases/change_language_use_case.dart';
-import 'package:cms/features/auth/presentation/cubit/login_cubit.dart';
-import 'package:cms/features/auth/presentation/cubit/otp_cubit.dart';
+import 'package:cms/features/auth/inject_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cms/features/auth/domain/repositories/language_repository.dart';
@@ -13,6 +12,9 @@ import 'package:cms/features/auth/presentation/cubit/language_cubit.dart';
 final getIt = GetIt.instance;
 
 Future<void> init() async {
+  // Make sure that auth inject is initialized
+  initAuthInjection();
+
   // First, initialize SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
@@ -40,8 +42,4 @@ Future<void> init() async {
       saveLanguageUseCase: getIt(),
     ),
   );
-
-  getIt.registerFactory<LoginCubit>(() => LoginCubit());
-
-  getIt.registerFactory<OtpCubit>(() => OtpCubit());
 }
