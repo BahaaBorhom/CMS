@@ -7,6 +7,7 @@ import 'package:cms/features/auth/presentation/cubit/language_cubit.dart';
 import 'package:cms/features/auth/presentation/cubit/language_state.dart';
 import 'package:cms/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:cms/features/auth/presentation/cubit/login_state.dart';
+import 'package:cms/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:cms/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,10 +32,8 @@ class LoginScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => OtpScreen(
-                    phoneNumber:
-                        state.phoneNumber,
-                  ),
+                  builder: (context) =>
+                      OtpScreen(phoneNumber: state.phoneNumber),
                 ),
               );
               context.read<LoginCubit>().resetNavigation();
@@ -150,9 +149,7 @@ class LoginScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: responsive.topSpacing,
-                                ),
+                                SizedBox(height: responsive.topSpacing),
                                 Container(
                                   width: 92,
                                   height: 92,
@@ -181,9 +178,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
 
-                          SizedBox(
-                            height: responsive.betweenWelcomeAndField,
-                          ),
+                          SizedBox(height: responsive.betweenWelcomeAndField),
                           // -------- Phone Field --------
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -204,6 +199,67 @@ class LoginScreen extends StatelessWidget {
                                   },
                                 );
                               },
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+
+                          // ---- Password Field ----
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: BlocBuilder<LoginCubit, LoginState>(
+                              builder: (context, state) {
+                                return CustomTextField(
+                                  label: 'Password',
+                                  hint: 'Enter your password',
+                                  prefixIcon: Icons.lock_outlined,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  obscureText: !state.isPasswordVisible,
+                                  errorText: state.passwordError,
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      state.isPasswordVisible
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                      color: AppColors.customGray,
+                                    ),
+                                    onPressed: () {
+                                      context
+                                          .read<LoginCubit>()
+                                          .togglePasswordVisibility();
+                                    },
+                                  ),
+                                  onChanged: (value) {
+                                    context
+                                        .read<LoginCubit>()
+                                        .onPasswordChanged(value);
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          // ---- Forgot Password ----
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton(
+                              onPressed: () {
+                                // Navigate to Forgot Password screen
+                                Navigator.pushNamed(
+                                  context,
+                                  ForgotPasswordScreen.routeName,
+                                );
+                              },
+                              child: Text(
+                                "Forgot Password?",
+                                style: FontHeading.bodySmall.copyWith(
+                                  color: AppColors.main_background_blue,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor:
+                                      AppColors.main_background_blue,
+                                ),
+                              ),
                             ),
                           ),
 
@@ -228,7 +284,7 @@ class LoginScreen extends StatelessWidget {
                                             !loginState.isLoading
                                         ? () => context
                                               .read<LoginCubit>()
-                                              .submitPhoneNumber()
+                                              .submitLogin()
                                         : null,
                                     style: ElevatedButton.styleFrom(
                                       disabledBackgroundColor: AppColors
@@ -257,7 +313,7 @@ class LoginScreen extends StatelessWidget {
                                             ),
                                           )
                                         : const Text(
-                                            'Send code',
+                                            'Log in',
                                             style: FontHeading.button,
                                           ),
                                   );

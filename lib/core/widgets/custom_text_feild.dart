@@ -12,6 +12,8 @@ class CustomTextField extends StatefulWidget {
   final String? errorText;
   final Function(String)? onChanged; // receives raw digits
   final bool isPhoneNumber; // ⭐ new flag
+  final bool obscureText; // ✅ New
+  final Widget? suffixIcon; // ✅ New
 
   const CustomTextField({
     super.key,
@@ -23,6 +25,8 @@ class CustomTextField extends StatefulWidget {
     this.errorText,
     this.onChanged,
     this.isPhoneNumber = false, // default false
+     this.obscureText = false, // ✅ New
+    this.suffixIcon, // ✅ New
   });
 
   @override
@@ -115,7 +119,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
       inputFormatters: widget.isPhoneNumber
           ? [FilteringTextInputFormatter.digitsOnly] // only digits allowed
           : null,
+          obscureText: widget.obscureText, // ✅ Add this
       decoration: InputDecoration(
+         suffixIcon: widget.suffixIcon, // ✅ Add this
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.main_background_blue, width: 2.0),
           borderRadius: BorderRadius.circular(8.0),
