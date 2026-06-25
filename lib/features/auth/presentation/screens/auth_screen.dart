@@ -42,16 +42,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
           if (state.status == AuthStatus.loaded) {
             // TODO: Replace this with your actual loaded UI
-            return const Scaffold(
-              body: Center(child: Text('Data Loaded')),
-            );
+            return const Scaffold(body: Center(child: Text('Data Loaded')));
           }
 
-          return Scaffold(
-            body: Center(
-              child: Text('auth screen'),
-            ),
-          );
+          return Scaffold(body: Center(child: Text('auth screen')));
         },
       ),
     );

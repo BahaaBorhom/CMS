@@ -1,32 +1,14 @@
-import '../../domain/use_cases/home_use_case.dart';
+// lib/features/home/presentation/cubit/home_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  final HomeUseCase homeUseCase;
+  HomeCubit() : super(const HomeState());
 
-  HomeCubit({required this.homeUseCase})
-      : super(const HomeState(status: HomeStatus.initial));
-
-  Future<void> fetchData() async {
-    emit(state.copyWith(status: HomeStatus.loading));
-
-    final result = await homeUseCase.call();
-
-    result.fold(
-      (exception) => emit(
-        state.copyWith(
-          status: HomeStatus.error,
-          errorMessage: exception.toString(),
-        ),
-      ),
-      (_) => emit(
-        state.copyWith(
-          status: HomeStatus.loaded,
-          errorMessage: null,
-        ),
-      ),
-    );
+  Future<void> loadHomeData() async {
+    emit(state.copyWith(isLoading: true));
+    // Simulate API call
+    await Future.delayed(const Duration(milliseconds: 500));
+    emit(state.copyWith(isLoading: false));
   }
 }

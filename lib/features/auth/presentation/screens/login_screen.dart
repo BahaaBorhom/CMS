@@ -63,8 +63,6 @@ class LoginScreen extends StatelessWidget {
                             padding: const EdgeInsets.only(
                               left: 10.0,
                               right: 10.0,
-                              bottom:
-                                  24.0, // ✅ keeps bottom spacing, removes top padding
                             ),
                             child: Column(
                               children: [
@@ -201,7 +199,6 @@ class LoginScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(height: 8),
 
                           // ---- Password Field ----
                           Padding(
@@ -268,12 +265,7 @@ class LoginScreen extends StatelessWidget {
 
                           // -------- Button & Terms --------
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              24,
-                              24,
-                              24,
-                              8,
-                            ), // bottom 8
+                            padding: const EdgeInsets.all(8.0), // bottom 8
                             child: Container(
                               width: double.infinity,
                               child: BlocBuilder<LoginCubit, LoginState>(

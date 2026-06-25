@@ -127,7 +127,7 @@ class WelcomeScreen extends StatelessWidget {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigate to sign up
+                            Navigator.pushNamed(context, '/signup');
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.main_background_blue
@@ -152,7 +152,7 @@ class WelcomeScreen extends StatelessWidget {
                       const SizedBox(height: 12),
                       TextButton(
                         onPressed: () {
-                          // Navigate as guest
+                          Navigator.pushNamed(context, '/home');
                         },
                         style: TextButton.styleFrom(
                           foregroundColor: AppColors.main_background_blue,

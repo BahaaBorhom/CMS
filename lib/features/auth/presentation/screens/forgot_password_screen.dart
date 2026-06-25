@@ -42,7 +42,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                         left: 10.0,
                         right: 10.0,
                         bottom:
-                            24.0, // ✅ keeps bottom spacing, removes top padding
+                            8.0, // ✅ keeps bottom spacing, removes top padding
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +62,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                             ),
                           ),
 
-                          SizedBox(height: responsive.betweenSubAndOtp),
+                          SizedBox(height: responsive.betweenLogoAndWelcome),
 
                           // ---- Title ----
                           Center(
@@ -87,7 +87,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                             ),
                           ),
 
-                          const SizedBox(height: 52),
+                          SizedBox(height: responsive.betweenWelcomeAndField),
 
                           // ---- Password Field ----
                           BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
@@ -209,8 +209,6 @@ class ForgotPasswordScreen extends StatelessWidget {
 
                           // ---- Terms ----
                           _buildTermsSection(),
-
-                          const SizedBox(height: 20),
                         ],
                       ),
                     ),

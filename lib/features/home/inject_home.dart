@@ -1,24 +1,27 @@
+import 'package:cms/features/home/presentation/cubit/home_cubit.dart';
+
 import '../../injection_container.dart';
 import 'data/data_sources/remote/home_remote_data_source.dart';
 import 'data/repositories/home_repository_impl.dart';
 import 'domain/repositories/home_repository.dart';
 import 'domain/use_cases/home_use_case.dart';
-import 'presentation/cubit/home_cubit.dart';
 
 //call this function in ServiceLocator.setup() function
+final sl = getIt ;
 injectHome() {
   // cubit
-  getIt.registerFactory(() => HomeCubit(homeUseCase: getIt()));
+  // getIt.registerFactory(() => HomeCubit(homeUseCase: getIt()));
+  sl.registerFactory(() => HomeCubit());
 
   // Repository
-  getIt.registerLazySingleton<HomeRepository>(
-          () => HomeRepositoryImpl(remoteDataSource: getIt()));
+  sl.registerLazySingleton<HomeRepository>(
+          () => HomeRepositoryImpl(remoteDataSource: sl()));
 
   // UseCases
-  getIt.registerLazySingleton(() => HomeUseCase(getIt()));
+  sl.registerLazySingleton(() => HomeUseCase(sl()));
 
   // DataSources
-  getIt.registerLazySingleton<HomeRemoteDataSource>(
+  sl.registerLazySingleton<HomeRemoteDataSource>(
           () => HomeRemoteDataSourceImpl());
 }
       

@@ -1,27 +1,20 @@
-
-enum HomeStatus {
-  initial,
-  loading,
-  loaded,
-  error,
-}
-
+// lib/features/home/presentation/cubit/home_state.dart
 class HomeState {
-  final HomeStatus status;
+  final bool isLoading;
   final String? errorMessage;
 
   const HomeState({
-    required this.status,
+    this.isLoading = false,
     this.errorMessage,
   });
 
   HomeState copyWith({
-    HomeStatus? status,
+    bool? isLoading,
     String? errorMessage,
   }) {
     return HomeState(
-      status: status ?? this.status,
-      errorMessage: errorMessage ?? this.errorMessage,
+      isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage,
     );
   }
 }

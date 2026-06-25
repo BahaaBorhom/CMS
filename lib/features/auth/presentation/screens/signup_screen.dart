@@ -1,0 +1,623 @@
+// lib/features/auth/presentation/screens/signup_screen.dart
+import 'package:cms/core/constants/assets.dart';
+import 'package:cms/core/constants/font_heading.dart';
+import 'package:cms/core/constants/responsive_constants.dart';
+import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/core/widgets/custom_text_feild.dart';
+import 'package:cms/features/auth/presentation/cubit/language_cubit.dart';
+import 'package:cms/features/auth/presentation/cubit/language_state.dart';
+import 'package:cms/features/auth/presentation/cubit/signup_cubit.dart';
+import 'package:cms/features/auth/presentation/cubit/signup_state.dart';
+import 'package:cms/injection_container.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class SignupScreen extends StatelessWidget {
+  const SignupScreen({super.key});
+  static const String routeName = "/signup";
+
+  @override
+  Widget build(BuildContext context) {
+    final responsive = ResponsiveConstants.fromContext(context);
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => getIt<LanguageCubit>()),
+        BlocProvider(create: (context) => getIt<SignupCubit>()),
+      ],
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 10.0,
+                        right: 10.0,
+                        bottom: 24.0,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildTopSection(context, responsive),
+
+                          // Full Name
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 16,
+                              right: 16,
+                              bottom: 8,
+                            ),
+                            child: BlocBuilder<SignupCubit, SignupState>(
+                              builder: (context, state) {
+                                return CustomTextField(
+                                  label: 'Full name*',
+                                  hint: 'Enter your full name',
+                                  prefixIcon: Icons.person_outline,
+                                  keyboardType: TextInputType.name,
+                                  errorText: state.nameError,
+                                  onChanged: (value) {
+                                    context.read<SignupCubit>().onNameChanged(
+                                      value,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+
+                          // Gender
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            child: BlocBuilder<SignupCubit, SignupState>(
+                              builder: (context, state) {
+                                final bool hasError = state.genderError != null;
+                                // final bool hasValue = state.gender.isNotEmpty;
+
+                                Color borderColor;
+                                double borderWidth;
+
+                                if (hasError) {
+                                  borderColor = Colors.red;
+                                  borderWidth = 2;
+                                }
+                                // else if (hasValue) {
+                                //   borderColor = AppColors.main_background_blue;
+                                //   borderWidth = 2;
+                                // }
+                                else {
+                                  borderColor = AppColors.customGray;
+                                  borderWidth = 1;
+                                }
+
+                                Color labelColor = hasError
+                                    ? Colors.red
+                                    : AppColors.customGray;
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Gender*',
+                                      style: FontHeading.bodySmall.copyWith(
+                                        color: labelColor,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: borderColor,
+                                          width: borderWidth,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: DropdownButtonFormField<String>(
+                                        value: state.gender.isEmpty
+                                            ? null
+                                            : state.gender,
+                                        isExpanded: true,
+                                        hint: Text(
+                                          'Choose your gender',
+                                          style: FontHeading.body.copyWith(
+                                            color: AppColors.customGray,
+                                          ),
+                                        ),
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 18,
+                                          ),
+                                        ),
+                                        style: FontHeading.body.copyWith(
+                                          color: Colors.black,
+                                        ),
+                                        icon: Icon(
+                                          Icons.arrow_drop_down,
+                                          color: hasError
+                                              ? Colors.red
+                                              : AppColors.customGray,
+                                        ),
+                                        items: ['Male', 'Female', 'Other']
+                                            .map(
+                                              (gender) => DropdownMenuItem(
+                                                value: gender,
+                                                child: Text(gender),
+                                              ),
+                                            )
+                                            .toList(),
+                                        onChanged: (value) {
+                                          if (value != null) {
+                                            context
+                                                .read<SignupCubit>()
+                                                .onGenderChanged(value);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    if (state.genderError != null)
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 4,
+                                          left: 16,
+                                        ),
+                                        child: Text(
+                                          state.genderError!,
+                                          style: const TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+
+                          // ---- Date of Birth - Only Suffix Button Triggers Date Picker ----
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            child: BlocBuilder<SignupCubit, SignupState>(
+                              builder: (context, state) {
+                                final bool hasError = state.dobError != null;
+                                final bool hasValue = state.dateOfBirth != null;
+
+                                Color borderColor;
+                                double borderWidth;
+
+                                if (hasError) {
+                                  borderColor = Colors.red;
+                                  borderWidth = 2;
+                                } else {
+                                  borderColor = AppColors.customGray;
+                                  borderWidth = 1;
+                                }
+
+                                Color labelColor = hasError
+                                    ? Colors.red
+                                    : AppColors.customGray;
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Date of birth*',
+                                      style: FontHeading.bodySmall.copyWith(
+                                        color: labelColor,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Container(
+                                      height: 56,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: borderColor,
+                                          width: borderWidth,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          // ---- LEFT Calendar Icon (DECORATIVE - does nothing) ----
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 16,
+                                            ),
+                                            child: Icon(
+                                              Icons.calendar_today_outlined,
+                                              color: hasError
+                                                  ? Colors.red
+                                                  : AppColors.customGray,
+                                              size: 20,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          // ---- Date Text (NOT CLICKABLE - just displays) ----
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 4,
+                                                  ),
+                                              child: Text(
+                                                state.dateOfBirth != null
+                                                    ? '${state.dateOfBirth!.day.toString().padLeft(2, '0')}/${state.dateOfBirth!.month.toString().padLeft(2, '0')}/${state.dateOfBirth!.year}'
+                                                    : 'DD/MM/YYYY',
+                                                style: FontHeading.body
+                                                    .copyWith(
+                                                      color: hasValue
+                                                          ? Colors.black
+                                                          : AppColors
+                                                                .customGray,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                          // ---- Clear Button (X) ----
+                                          if (state.dateOfBirth != null)
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.close,
+                                                color: AppColors.customGray,
+                                                size: 18,
+                                              ),
+                                              onPressed: () {
+                                                context
+                                                    .read<SignupCubit>()
+                                                    .clearDateOfBirth();
+                                              },
+                                            ),
+                                          // ---- RIGHT Calendar Icon (CLICKABLE - opens date picker) ----
+                                          // ✅ Color set to RED (always)
+                                          GestureDetector(
+                                            onTap: () async {
+                                              final picked =
+                                                  await showDatePicker(
+                                                    context: context,
+                                                    initialDate: DateTime.now()
+                                                        .subtract(
+                                                          const Duration(
+                                                            days: 365 * 18,
+                                                          ),
+                                                        ),
+                                                    firstDate: DateTime(1900),
+                                                    lastDate: DateTime.now(),
+                                                  );
+                                              if (picked != null) {
+                                                context
+                                                    .read<SignupCubit>()
+                                                    .onDateOfBirthChanged(
+                                                      picked,
+                                                    );
+                                              }
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 16,
+                                              ),
+                                              child: Icon(
+                                                Icons.calendar_month_outlined,
+                                                color: Colors.black,
+                                                size: 25,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    if (state.dobError != null)
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 4,
+                                          left: 16,
+                                        ),
+                                        child: Text(
+                                          state.dobError!,
+                                          style: const TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+
+                          // Phone Number Text Field
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            child: BlocBuilder<SignupCubit, SignupState>(
+                              builder: (context, state) {
+                                return CustomTextField(
+                                  label: 'Phone number*',
+                                  hint: '09XX XXXX XXX',
+                                  prefixIcon: Icons.phone_outlined,
+                                  keyboardType: TextInputType.phone,
+                                  isPhoneNumber: true,
+                                  errorText: state.phoneError,
+                                  onChanged: (value) {
+                                    context.read<SignupCubit>().onPhoneChanged(
+                                      value,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+
+                          const SizedBox(height: 8),
+                          const Spacer(),
+
+                          // Button
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: BlocBuilder<SignupCubit, SignupState>(
+                                builder: (context, state) {
+                                  return ElevatedButton(
+                                    onPressed: state.isValid && !state.isLoading
+                                        ? () {
+                                            context
+                                                .read<SignupCubit>()
+                                                .submitSignup();
+                                          }
+                                        : null,
+                                    style: ElevatedButton.styleFrom(
+                                      disabledBackgroundColor: AppColors
+                                          .main_background_blue
+                                          .withOpacity(0.2),
+                                      backgroundColor:
+                                          AppColors.main_background_blue,
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: state.isLoading
+                                        ? const SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                    Colors.white,
+                                                  ),
+                                            ),
+                                          )
+                                        : const Text(
+                                            'Send verification code',
+                                            style: FontHeading.button,
+                                          ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+
+                          // Terms
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 32,
+                              right: 32,
+                              bottom: 0,
+                            ),
+                            child: Wrap(
+                              alignment: WrapAlignment.start,
+                              children: [
+                                Text(
+                                  "By continuing, you agree to our ",
+                                  style: FontHeading.caption.copyWith(
+                                    color: AppColors.grayDark,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                    "Terms of Service",
+                                    style: FontHeading.caption.copyWith(
+                                      color: AppColors.main_background_blue,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor:
+                                          AppColors.main_background_blue,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  " and ",
+                                  style: FontHeading.caption.copyWith(
+                                    color: AppColors.grayDark,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                    "Privacy Policy",
+                                    style: FontHeading.caption.copyWith(
+                                      color: AppColors.main_background_blue,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor:
+                                          AppColors.main_background_blue,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopSection(
+    BuildContext context,
+    ResponsiveConstants responsive,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 24.0),
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          _buildAppBar(context),
+          // ✅ Minimal space between AppBar and Avatar
+          const SizedBox(height: 8),
+
+          Center(
+            child: Text(
+              "Create new account",
+              style: FontHeading.heading2.copyWith(color: AppColors.black),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Center(
+            child: Text(
+              "We just need some information",
+              style: FontHeading.bodyLarge.copyWith(color: AppColors.grayDark),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          // ✅ Tight gap between Avatar and Title
+          const SizedBox(height: 8),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 32),
+            child: Column(
+              children: [
+                // Avatar
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: 92,
+                      height: 92,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.customGray,
+                      ),
+                      child: const Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -2,
+                      right: -2,
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.main_background_blue,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        child: const Icon(
+                          Icons.add_a_photo,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // ✅ Directly under subtitle – NO gap
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    "(Optional)",
+                    style: FontHeading.bodyLarge.copyWith(
+                      color: AppColors.grayDark,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppBar(BuildContext context) {
+    return BlocBuilder<LanguageCubit, LanguageState>(
+      builder: (context, langState) {
+        return Row(
+          children: [
+            IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back),
+            ),
+            Text("Back", style: FontHeading.body.copyWith(color: Colors.black)),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: BlocBuilder<LanguageCubit, LanguageState>(
+                builder: (context, languageState) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.arrow_drop_down, color: Colors.black),
+                      const SizedBox(width: 4),
+                      DropdownButton<String>(
+                        value: languageState.selectedLanguage,
+                        icon: const SizedBox(),
+                        underline: const SizedBox(),
+                        style: FontHeading.body.copyWith(color: Colors.black),
+                        items: languageState.languages.map((String language) {
+                          return DropdownMenuItem<String>(
+                            value: language,
+                            child: Text(language),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            context.read<LanguageCubit>().changeLanguage(
+                              newValue,
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 8),
+            Image.asset(Assets.assetsImagesGlobe, height: 24, width: 24),
+          ],
+        );
+      },
+    );
+  }
+}

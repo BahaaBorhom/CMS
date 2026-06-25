@@ -37,7 +37,11 @@ class OtpScreen extends StatelessWidget {
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: const EdgeInsets.only(
+                        left: 8,
+                        right: 16,
+                        top: 8,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -136,55 +140,68 @@ class OtpScreen extends StatelessWidget {
 
                           SizedBox(height: responsive.betweenSubAndOtp),
 
-                          // ---- OTP Input (6-digit) ----
-                          BlocBuilder<OtpCubit, OtpState>(
-                            builder: (context, state) {
-                              return _buildOtpInput(context);
-                            },
-                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Column(
+                              children: [
+                                // ---- OTP Input (6-digit) ----
+                                BlocBuilder<OtpCubit, OtpState>(
+                                  builder: (context, state) {
+                                    return _buildOtpInput(context);
+                                  },
+                                ),
 
-                          const SizedBox(height: 16),
+                                const SizedBox(height: 16),
 
-                          // ---- Resend timer ----
-                          BlocBuilder<OtpCubit, OtpState>(
-                            builder: (context, state) {
-                              return Row(
-                                children: [
-                                  Text(
-                                    "Resend code in ",
-                                    style: FontHeading.bodySmall.copyWith(
-                                      color: AppColors.grayDark,
-                                    ),
-                                  ),
-                                  Text(
-                                    _formatTimer(state.resendTimer),
-                                    style: FontHeading.bodySmall.copyWith(
-                                      color: AppColors.main_background_blue,
-                                      decoration: TextDecoration.underline,
-                                      decorationColor:
-                                          AppColors.main_background_blue,
-                                    ),
-                                  ),
-                                  if (state.resendTimer == 0)
-                                    TextButton(
-                                      onPressed: () {
-                                        context.read<OtpCubit>().resendCode();
-                                      },
-                                      child: Text(
-                                        "Resend",
-                                        style: FontHeading.bodySmall.copyWith(
-                                          color: AppColors.main_background_blue,
-                                          decoration: TextDecoration.underline,
-                                          decorationColor:
-                                              AppColors.main_background_blue,
+                                // ---- Resend timer ----
+                                BlocBuilder<OtpCubit, OtpState>(
+                                  builder: (context, state) {
+                                    return Row(
+                                      children: [
+                                        Text(
+                                          "Resend code in ",
+                                          style: FontHeading.bodySmall.copyWith(
+                                            color: AppColors.grayDark,
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                ],
-                              );
-                            },
+                                        Text(
+                                          _formatTimer(state.resendTimer),
+                                          style: FontHeading.bodySmall.copyWith(
+                                            color:
+                                                AppColors.main_background_blue,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            decorationColor:
+                                                AppColors.main_background_blue,
+                                          ),
+                                        ),
+                                        if (state.resendTimer == 0)
+                                          TextButton(
+                                            onPressed: () {
+                                              context
+                                                  .read<OtpCubit>()
+                                                  .resendCode();
+                                            },
+                                            child: Text(
+                                              "Resend",
+                                              style: FontHeading.bodySmall
+                                                  .copyWith(
+                                                    color: AppColors
+                                                        .main_background_blue,
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    decorationColor: AppColors
+                                                        .main_background_blue,
+                                                  ),
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-
                           const Spacer(),
 
                           // ---- Verify Button ----
@@ -258,9 +275,9 @@ class OtpScreen extends StatelessWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: List.generate(6, (index) {
-            final digit = state.otpCode.length > index
-                ? state.otpCode[index]
-                : '';
+            // final digit = state.otpCode.length > index
+            //     ? state.otpCode[index]
+            //     : '';
             return SizedBox(
               width: 48,
               height: 56,

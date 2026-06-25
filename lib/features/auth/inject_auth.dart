@@ -1,4 +1,5 @@
 import 'package:cms/features/auth/presentation/cubit/forgot_password_cubit.dart';
+import 'package:cms/features/auth/presentation/cubit/signup_cubit.dart';
 import 'package:cms/injection_container.dart';
 import 'data/data_sources/local/auth_local_data_source.dart';
 import 'domain/use_cases/check_onboarding_use_case.dart';
@@ -24,4 +25,5 @@ void initAuthInjection() {
   sl.registerFactory<LoginCubit>(() => LoginCubit());
   sl.registerFactory<OtpCubit>(() => OtpCubit());
   sl.registerFactory<ForgotPasswordCubit>(() => ForgotPasswordCubit());
+  sl.registerFactory<SignupCubit>(() => SignupCubit());
 }
