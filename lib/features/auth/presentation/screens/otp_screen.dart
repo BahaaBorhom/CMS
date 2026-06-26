@@ -273,79 +273,83 @@ class OtpScreen extends StatelessWidget {
     return BlocBuilder<OtpCubit, OtpState>(
       builder: (context, state) {
         return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(6, (index) {
             // final digit = state.otpCode.length > index
             //     ? state.otpCode[index]
             //     : '';
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                width: 48,
-                height: 56,
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  maxLength: 1,
-                  style: FontHeading.heading1.copyWith(
-                    fontSize: 24,
-                    color: Colors.black,
-                  ),
-                  decoration: InputDecoration(
-                    counterText: '',
-                    filled: true,
-                    fillColor: AppColors.main_background_white,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        color: AppColors.customGray,
-                        width: 1,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        color: AppColors.main_background_blue,
-                        width: 2,
-                      ),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: Colors.red, width: 1),
-                    ),
-                    contentPadding: const EdgeInsets.all(0),
-                  ),
-                  onChanged: (value) {
-                    // Get current OTP code
-                    String currentCode = state.otpCode;
-                    List<String> chars = currentCode.split('');
-
-                    if (value.isNotEmpty) {
-                      // Typing a digit – add/replace at current position
-                      if (index < chars.length) {
-                        chars[index] = value;
-                      } else {
-                        chars.add(value);
-                      }
-                    } else {
-                      // Deleting – remove at current position
-                      if (index < chars.length) {
-                        chars.removeAt(index);
-                      }
-                    }
-
-                    // Update cubit with the new code
-                    final updated = chars.join();
-                    context.read<OtpCubit>().onOtpChanged(updated);
-
-                    // Auto-focus next field on input
-                    if (value.isNotEmpty && index < 5) {
-                      FocusScope.of(context).nextFocus();
-                    }
-                  },
+            return
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child:
+            SizedBox(
+              width: 48,
+              height: 56,
+              child: TextField(
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                maxLength: 1,
+                style: FontHeading.heading1.copyWith(
+                  fontSize: 24,
+                  color: Colors.black,
                 ),
+                decoration: InputDecoration(
+                  counterText: '',
+                  filled: true,
+                  fillColor: AppColors.main_background_white,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(
+                      color: AppColors.customGray,
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(
+                      color: AppColors.main_background_blue,
+                      width: 2,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: Colors.red, width: 1),
+                  ),
+                  contentPadding: const EdgeInsets.all(0),
+                ),
+                onChanged: (value) {
+                  // Get current OTP code
+                  String currentCode = state.otpCode;
+                  List<String> chars = currentCode.split('');
+
+                  if (value.isNotEmpty) {
+                    // Typing a digit – add/replace at current position
+                    if (index < chars.length) {
+                      chars[index] = value;
+                    } else {
+                      chars.add(value);
+                    }
+                  } else {
+                    // Deleting – remove at current position
+                    if (index < chars.length) {
+                      chars.removeAt(index);
+                    }
+                  }
+
+                  // Update cubit with the new code
+                  final updated = chars.join();
+                  context.read<OtpCubit>().onOtpChanged(updated);
+
+                  // Auto-focus next field on input
+                  if (value.isNotEmpty && index < 5) {
+                    FocusScope.of(context).nextFocus();
+                  }
+                },
               ),
-            );
+            )
+            //   ,
+            // )
+            ;
           }),
         );
       },
