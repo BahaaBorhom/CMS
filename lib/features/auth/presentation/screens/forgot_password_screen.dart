@@ -208,7 +208,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                           const SizedBox(height: 16),
 
                           // ---- Terms ----
-                          _buildTermsSection(),
+                          Center(child: _buildTermsSection()),
                         ],
                       ),
                     ),

@@ -1,11 +1,11 @@
 import 'package:cms/core/widgets/splash_screen.dart';
 import 'package:cms/features/auth/presentation/screens/auth_screen.dart';
 import 'package:cms/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:cms/features/auth/presentation/screens/home_screen.dart';
 import 'package:cms/features/auth/presentation/screens/login_screen.dart';
 import 'package:cms/features/auth/presentation/screens/on_bording_screen.dart';
 import 'package:cms/features/auth/presentation/screens/signup_screen.dart';
 import 'package:cms/features/auth/presentation/screens/welcome_screen.dart';
-import 'package:cms/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/injection_container.dart';
 

@@ -56,23 +56,31 @@ class SignupScreen extends StatelessWidget {
                             ),
                             child: BlocBuilder<SignupCubit, SignupState>(
                               builder: (context, state) {
-                                return CustomTextField(
-                                  label: 'Full name*',
-                                  hint: 'Enter your full name',
-                                  prefixIcon: Icons.person_outline,
-                                  keyboardType: TextInputType.name,
-                                  errorText: state.nameError,
-                                  onChanged: (value) {
-                                    context.read<SignupCubit>().onNameChanged(
-                                      value,
-                                    );
-                                  },
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildRequiredLabel('Full Name'),
+                                    SizedBox(height: 8),
+                                    CustomTextField(
+                                      label: '',
+                                      hint: 'Enter your full name',
+                                      prefixIcon: Icons.person_outline,
+                                      keyboardType: TextInputType.name,
+                                      errorText: state.nameError,
+                                      onChanged: (value) {
+                                        context
+                                            .read<SignupCubit>()
+                                            .onNameChanged(value);
+                                      },
+                                    ),
+                                  ],
                                 );
                               },
                             ),
                           ),
 
                           // Gender
+                          // Gender Dropdown with Person Icon
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -81,7 +89,6 @@ class SignupScreen extends StatelessWidget {
                             child: BlocBuilder<SignupCubit, SignupState>(
                               builder: (context, state) {
                                 final bool hasError = state.genderError != null;
-                                // final bool hasValue = state.gender.isNotEmpty;
 
                                 Color borderColor;
                                 double borderWidth;
@@ -89,29 +96,15 @@ class SignupScreen extends StatelessWidget {
                                 if (hasError) {
                                   borderColor = Colors.red;
                                   borderWidth = 2;
-                                }
-                                // else if (hasValue) {
-                                //   borderColor = AppColors.main_background_blue;
-                                //   borderWidth = 2;
-                                // }
-                                else {
+                                } else {
                                   borderColor = AppColors.customGray;
                                   borderWidth = 1;
                                 }
 
-                                Color labelColor = hasError
-                                    ? Colors.red
-                                    : AppColors.customGray;
-
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'Gender*',
-                                      style: FontHeading.bodySmall.copyWith(
-                                        color: labelColor,
-                                      ),
-                                    ),
+                                    _buildRequiredLabel('Gender'),
                                     const SizedBox(height: 8),
                                     Container(
                                       decoration: BoxDecoration(
@@ -133,6 +126,11 @@ class SignupScreen extends StatelessWidget {
                                           ),
                                         ),
                                         decoration: const InputDecoration(
+                                          prefixIcon: Icon(
+                                            Icons
+                                                .person_outline, // ✅ Person icon at the start
+                                            color: AppColors.customGray,
+                                          ),
                                           border: InputBorder.none,
                                           contentPadding: EdgeInsets.symmetric(
                                             horizontal: 16,
@@ -148,7 +146,7 @@ class SignupScreen extends StatelessWidget {
                                               ? Colors.red
                                               : AppColors.customGray,
                                         ),
-                                        items: ['Male', 'Female', 'Other']
+                                        items: ['Male', 'Female']
                                             .map(
                                               (gender) => DropdownMenuItem(
                                                 value: gender,
@@ -184,7 +182,6 @@ class SignupScreen extends StatelessWidget {
                               },
                             ),
                           ),
-
                           // ---- Date of Birth - Only Suffix Button Triggers Date Picker ----
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -207,19 +204,14 @@ class SignupScreen extends StatelessWidget {
                                   borderWidth = 1;
                                 }
 
-                                Color labelColor = hasError
-                                    ? Colors.red
-                                    : AppColors.customGray;
+                                // Color labelColor = hasError
+                                //     ? Colors.red
+                                //     : AppColors.customGray;
 
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'Date of birth*',
-                                      style: FontHeading.bodySmall.copyWith(
-                                        color: labelColor,
-                                      ),
-                                    ),
+                                    _buildRequiredLabel('Date of birth'),
                                     const SizedBox(height: 8),
                                     Container(
                                       height: 56,
@@ -347,18 +339,25 @@ class SignupScreen extends StatelessWidget {
                             ),
                             child: BlocBuilder<SignupCubit, SignupState>(
                               builder: (context, state) {
-                                return CustomTextField(
-                                  label: 'Phone number*',
-                                  hint: '09XX XXXX XXX',
-                                  prefixIcon: Icons.phone_outlined,
-                                  keyboardType: TextInputType.phone,
-                                  isPhoneNumber: true,
-                                  errorText: state.phoneError,
-                                  onChanged: (value) {
-                                    context.read<SignupCubit>().onPhoneChanged(
-                                      value,
-                                    );
-                                  },
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildRequiredLabel('Phone number'),
+                                    SizedBox(height: 8),
+                                    CustomTextField(
+                                      label: '',
+                                      hint: '09XX XXXX XXX',
+                                      prefixIcon: Icons.phone_outlined,
+                                      keyboardType: TextInputType.phone,
+                                      isPhoneNumber: true,
+                                      errorText: state.phoneError,
+                                      onChanged: (value) {
+                                        context
+                                            .read<SignupCubit>()
+                                            .onPhoneChanged(value);
+                                      },
+                                    ),
+                                  ],
                                 );
                               },
                             ),
@@ -486,7 +485,7 @@ class SignupScreen extends StatelessWidget {
     ResponsiveConstants responsive,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 24.0),
+      padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 8.0),
       child: Column(
         children: [
           const SizedBox(height: 10),
@@ -557,7 +556,7 @@ class SignupScreen extends StatelessWidget {
                   child: Text(
                     "(Optional)",
                     style: FontHeading.bodyLarge.copyWith(
-                      color: AppColors.grayDark,
+                      color: AppColors.customGray,
                     ),
                   ),
                 ),
@@ -620,4 +619,19 @@ class SignupScreen extends StatelessWidget {
       },
     );
   }
+}
+
+Widget _buildRequiredLabel(String text) {
+  return RichText(
+    text: TextSpan(
+      text: text,
+      style: FontHeading.bodySmall.copyWith(color: AppColors.grayDark),
+      children: [
+        TextSpan(
+          text: ' *',
+          style: TextStyle(color: Colors.red),
+        ),
+      ],
+    ),
+  );
 }
