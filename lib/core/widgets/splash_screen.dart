@@ -2,9 +2,6 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/theme/app_colors.dart';
-// import 'package:cms/features/auth/data/data_sources/local/auth_local_data_source.dart';
-// import 'package:cms/features/auth/presentation/screens/on_bording_screen.dart';
-// import 'package:cms/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:cms/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -39,26 +36,4 @@ class NavigationDecider extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeScreen();
   }
-  //   return FutureBuilder(
-  //     future: _checkOnboardingStatus(),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return const Scaffold(
-  //           body: Center(child: CircularProgressIndicator()),
-  //         );
-  //       }
-
-  //       if (snapshot.data == true) {
-  //         return const WelcomeScreen();
-  //       } else {
-  //         return  OnBordingScreen();
-  //       }
-  //     },
-  //   );
-  // }
-
-  // Future<bool> _checkOnboardingStatus() async {
-  //   final localDataSource = AuthLocalDataSource();
-  //   return await localDataSource.isOnboardingCompleted();
-  // }
 }
