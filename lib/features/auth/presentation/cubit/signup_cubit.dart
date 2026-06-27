@@ -1,4 +1,7 @@
 // lib/features/auth/presentation/cubit/signup_cubit.dart
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'signup_state.dart';
 
@@ -115,5 +118,25 @@ class SignupCubit extends Cubit<SignupState> {
         // Navigate to OTP verification
       });
     }
+  }
+
+  Future<void> pickProfileImage() async {
+    final picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 300,
+      maxHeight: 300,
+      imageQuality: 80,
+    );
+
+    if (pickedFile != null) {
+      final File imageFile = File(pickedFile.path);
+      emit(state.copyWith(profileImage: imageFile));
+    }
+  }
+
+  // Optional: method to remove image
+  void removeProfileImage() {
+    emit(state.copyWith(profileImage: null));
   }
 }

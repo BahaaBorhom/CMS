@@ -45,13 +45,13 @@ class SignupScreen extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          _buildTopSection(context, responsive),
-
                           // -------- Single BlocBuilder for All Fields --------
                           BlocBuilder<SignupCubit, SignupState>(
                             builder: (context, state) {
                               return Column(
                                 children: [
+                                  // Top Section
+                                  _buildTopSection(context, responsive, state),
                                   // Full Name
                                   _buildFullNameField(state),
                                   // Gender
@@ -383,6 +383,7 @@ class SignupScreen extends StatelessWidget {
   Widget _buildTopSection(
     BuildContext context,
     ResponsiveConstants responsive,
+    SignupState state,
   ) {
     return RepaintBoundary(
       child: Padding(
@@ -413,41 +414,57 @@ class SignupScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 32),
               child: Column(
                 children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        width: 92,
-                        height: 92,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.customGray,
-                        ),
-                        child: const Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 50,
-                        ),
-                      ),
-                      Positioned(
-                        bottom: -2,
-                        right: -2,
-                        child: Container(
-                          width: 28,
-                          height: 28,
+                  // ---- Avatar with Image Picker ----
+                  GestureDetector(
+                    onTap: () {
+                      context.read<SignupCubit>().pickProfileImage();
+                    },
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        // Avatar circle
+                        Container(
+                          width: 92,
+                          height: 92,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.main_background_blue,
-                            border: Border.all(color: Colors.white, width: 2),
+                            color: AppColors.customGray,
+                            image: state.profileImage != null
+                                ? DecorationImage(
+                                    image: FileImage(state.profileImage!),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
                           ),
-                          child: const Icon(
-                            Icons.add_a_photo,
-                            color: Colors.white,
-                            size: 16,
+                          child: state.profileImage == null
+                              ? const Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                  size: 50,
+                                )
+                              : null,
+                        ),
+                        // Camera icon (bottom-right)
+                        Positioned(
+                          bottom: -2,
+                          right: -2,
+                          child: Container(
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.main_background_blue,
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            child: const Icon(
+                              Icons.add_a_photo,
+                              color: Colors.white,
+                              size: 16,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Center(

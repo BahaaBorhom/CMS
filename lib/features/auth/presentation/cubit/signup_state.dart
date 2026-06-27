@@ -1,4 +1,6 @@
 // lib/features/auth/presentation/cubit/signup_state.dart
+import 'dart:io';
+
 class SignupState {
   final String fullName;
   final String gender;
@@ -13,6 +15,7 @@ class SignupState {
   final bool isPhoneValid;
   final bool isGenderFocused;
   final bool isDobFocused;
+  final File? profileImage; // 👈 new
 
   const SignupState({
     this.fullName = '',
@@ -28,6 +31,7 @@ class SignupState {
     this.isPhoneValid = false,
     this.isGenderFocused = false,
     this.isDobFocused = false,
+    this.profileImage,
   });
 
   SignupState copyWith({
@@ -44,6 +48,7 @@ class SignupState {
     bool? isPhoneValid,
     bool? isGenderFocused,
     bool? isDobFocused,
+    File? profileImage,
   }) {
     return SignupState(
       fullName: fullName ?? this.fullName,
@@ -59,6 +64,7 @@ class SignupState {
       isPhoneValid: isPhoneValid ?? this.isPhoneValid,
       isGenderFocused: isGenderFocused ?? this.isGenderFocused,
       isDobFocused: isDobFocused ?? this.isDobFocused,
+      profileImage: profileImage ?? this.profileImage,
     );
   }
 }
