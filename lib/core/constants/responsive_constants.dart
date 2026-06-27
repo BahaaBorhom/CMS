@@ -7,6 +7,7 @@ class ResponsiveConstants {
   final double betweenSubAndOtp;
   final double betweenLogoAndWelcome;
   final double betweenWelcomeAndField;
+  final double betweenSubAndField;
 
   const ResponsiveConstants({
     required this.isSmallScreen,
@@ -15,6 +16,7 @@ class ResponsiveConstants {
     required this.betweenSubAndOtp,
     required this.betweenLogoAndWelcome,
     required this.betweenWelcomeAndField,
+    required this.betweenSubAndField,
   });
 
   // Factory to create instance from screen height
@@ -25,8 +27,9 @@ class ResponsiveConstants {
       topSpacing: isSmall ? 24 : 44,
       betweenTitleAndSub: isSmall ? 8 : 12,
       betweenSubAndOtp: isSmall ? 24 : 36,
-      betweenLogoAndWelcome: isSmall ? 8 : 16,
+      betweenLogoAndWelcome: isSmall ? 16 : 36,
       betweenWelcomeAndField: isSmall ? 24 : 44,
+      betweenSubAndField: isSmall ? 25 : 52,
     );
   }
 
