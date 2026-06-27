@@ -1,5 +1,4 @@
 import 'package:cms/core/widgets/splash_screen.dart';
-import 'package:cms/features/auth/presentation/screens/auth_screen.dart';
 import 'package:cms/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:cms/features/auth/presentation/screens/home_screen.dart';
 import 'package:cms/features/auth/presentation/screens/login_screen.dart';
@@ -23,7 +22,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/welcome': (context) => const WelcomeScreen(),
-        '/auth': (context) => const AuthScreen(),
         '/onboarding': (context) => OnBordingScreen(),
         LoginScreen.routeName: (context) => const LoginScreen(), // ✅ Use routeName
         ForgotPasswordScreen.routeName: (context) => const ForgotPasswordScreen(), // ✅ Add this
