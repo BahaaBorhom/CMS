@@ -8,17 +8,18 @@ import 'presentation/cubit/home_cubit.dart';
 //call this function in ServiceLocator.setup() function
 injectHome() {
   // cubit
-  getIt.registerFactory(() => HomeCubit(homeUseCase: getIt()));
+  getIt.registerFactory(() => HomeCubit());
 
   // Repository
   getIt.registerLazySingleton<HomeRepository>(
-          () => HomeRepositoryImpl(remoteDataSource: getIt()));
+    () => HomeRepositoryImpl(remoteDataSource: getIt()),
+  );
 
   // UseCases
   getIt.registerLazySingleton(() => HomeUseCase(getIt()));
 
   // DataSources
   getIt.registerLazySingleton<HomeRemoteDataSource>(
-          () => HomeRemoteDataSourceImpl());
+    () => HomeRemoteDataSourceImpl(),
+  );
 }
-      

@@ -1,27 +1,36 @@
-
-enum HomeStatus {
-  initial,
-  loading,
-  loaded,
-  error,
-}
-
+// lib/features/home/presentation/cubit/home_state.dart
 class HomeState {
-  final HomeStatus status;
+  final bool isLoading;
   final String? errorMessage;
+  final List<String> appointments;
+  final List<String> alerts;
+  final List<String> clinics;
+  final List<Map<String, String>> history;
 
   const HomeState({
-    required this.status,
+    this.isLoading = false,
     this.errorMessage,
+    this.appointments = const [],
+    this.alerts = const [],
+    this.clinics = const [],
+    this.history = const [],
   });
 
   HomeState copyWith({
-    HomeStatus? status,
+    bool? isLoading,
     String? errorMessage,
+    List<String>? appointments,
+    List<String>? alerts,
+    List<String>? clinics,
+    List<Map<String, String>>? history,
   }) {
     return HomeState(
-      status: status ?? this.status,
-      errorMessage: errorMessage ?? this.errorMessage,
+      isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage,
+      appointments: appointments ?? this.appointments,
+      alerts: alerts ?? this.alerts,
+      clinics: clinics ?? this.clinics,
+      history: history ?? this.history,
     );
   }
 }

@@ -1,31 +1,46 @@
-import '../../domain/use_cases/home_use_case.dart';
+// lib/features/home/presentation/cubit/home_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  final HomeUseCase homeUseCase;
+  HomeCubit() : super(const HomeState());
 
-  HomeCubit({required this.homeUseCase})
-      : super(const HomeState(status: HomeStatus.initial));
+  Future<void> loadHomeData() async {
+    emit(state.copyWith(isLoading: true));
 
-  Future<void> fetchData() async {
-    emit(state.copyWith(status: HomeStatus.loading));
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 500));
 
-    final result = await homeUseCase.call();
-
-    result.fold(
-      (exception) => emit(
-        state.copyWith(
-          status: HomeStatus.error,
-          errorMessage: exception.toString(),
-        ),
-      ),
-      (_) => emit(
-        state.copyWith(
-          status: HomeStatus.loaded,
-          errorMessage: null,
-        ),
+    // Dummy data – replace later with real entities
+    emit(
+      state.copyWith(
+        isLoading: false,
+        appointments: [
+          // 'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
+          // 'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
+          // 'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
+          // 'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
+        ],
+        alerts: [
+          // '5 minutes ago – You\'re late for your appointment',
+          // '1 hour ago – Your next appointment is in 2 hours',
+        ],
+        clinics: [
+          // 'Some name clinic – Dentist – Damascus, Al-Mazzeh – 9:00 AM - 5:00 PM',
+          // 'Some name clinic – Dentist – Damascus, Al-Mazzeh – 9:30 AM - 5:00 PM',
+        ],
+        history: [
+          // {
+          //   'clinic': 'Some name clinic (Dentist)',
+          //   'location': 'Damascus, Al-Mazzeh',
+          //   'time': '3 months ago',
+          // },
+          // {
+          //   'clinic': 'Some name clinic (Dentist)',
+          //   'location': 'Damascus, Al-Mazzeh',
+          //   'time': '3 weeks ago',
+          // },
+        ],
       ),
     );
   }
