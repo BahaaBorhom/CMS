@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => getIt<HomeCubit>()..loadHomeData(),
       child: Scaffold(
-        backgroundColor: Colors.grey.shade50,
+        backgroundColor: AppColors.main_background_white,
         body: BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) {
             if (state.isLoading) {
@@ -27,43 +27,42 @@ class HomeScreen extends StatelessWidget {
 
             return CustomScrollView(
               slivers: [
-                // ---- Blue Header ----
                 SliverToBoxAdapter(child: _buildBlueHeader(context)),
-                // ---- Main Content ----
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Search Bar
                         _buildSearchBar(),
                         const SizedBox(height: 20),
-                        // Upcoming Appointments
-                        _buildSectionHeader(
-                          title: 'Upcoming appointments',
-                          onSeeAll: () {},
-                        ),
-                        const SizedBox(height: 12),
-                        _buildAppointmentsSlider(state.appointments),
-                        const SizedBox(height: 24),
 
-                        // Alerts
-                        // _buildSectionHeader(title: 'Alerts', onSeeAll: () {}),
-                        // const SizedBox(height: 12),
-                        // ..._buildAlerts(state.alerts),
-                        // const SizedBox(height: 24),
+                        if (state.appointments.isNotEmpty) ...[
+                          _buildSectionHeader(
+                            title: 'Upcoming appointments',
+                            onSeeAll: () {},
+                          ),
+                          const SizedBox(height: 12),
+                          _buildAppointmentsSlider(state.appointments),
+                          const SizedBox(height: 24),
+                        ],
 
-                        // Saved Clinics
-                        _buildSectionHeader(
+                        if (state.alerts.isNotEmpty) ...[
+                          _buildSectionHeader(title: 'Alerts', onSeeAll: () {}),
+                          const SizedBox(height: 12),
+                          ..._buildAlerts(state.alerts),
+                          const SizedBox(height: 24),
+                        ],
+
+                        _buildSectionHeaderWithIcon(
                           title: 'Saved clinics',
                           onSeeAll: () {},
+                          icon: Icons.bookmark,
                         ),
                         const SizedBox(height: 12),
                         _buildClinicsSlider(state.clinics),
                         const SizedBox(height: 24),
 
-                        // Visit History
                         _buildSectionHeader(
                           title: 'Visit history',
                           onSeeAll: () {},
@@ -104,7 +103,7 @@ class HomeScreen extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  radius: 26, // half of 52
+                  radius: 26,
                   backgroundColor: Colors.white,
                   backgroundImage: AssetImage(
                     Assets.assetsImagesUserFolanAlfolani,
@@ -121,12 +120,16 @@ class HomeScreen extends StatelessWidget {
                           fontSize: 18,
                           color: Colors.white,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         'View my records',
                         style: FontHeading.bodySmall.copyWith(
                           color: Colors.white70,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -139,29 +142,13 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
                   child: Center(
-                    child: Stack(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.notifications_outlined,
-                            color: AppColors.main_background_blue,
-                            size: 28,
-                          ),
-                        ),
-                        // Positioned(
-                        //   top: 8,
-                        //   right: 8,
-                        //   child: Container(
-                        //     width: 10,
-                        //     height: 10,
-                        //     decoration: const BoxDecoration(
-                        //       shape: BoxShape.circle,
-                        //       color: Colors.red,
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.notifications_outlined,
+                        color: AppColors.main_background_blue,
+                        size: 28,
+                      ),
                     ),
                   ),
                 ),
@@ -221,7 +208,6 @@ class HomeScreen extends StatelessWidget {
             ),
             child: IconButton(
               onPressed: () {
-                // TODO: Show filter dialog or bottom sheet
                 print('Filter button pressed');
               },
               icon: Icon(
@@ -249,10 +235,9 @@ class HomeScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: FontHeading.heading4.copyWith(
-              fontSize: 16,
-              color: Colors.black,
-            ),
+            style: FontHeading.heading4.copyWith(color: Colors.black),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
           GestureDetector(
             onTap: onSeeAll,
@@ -263,6 +248,8 @@ class HomeScreen extends StatelessWidget {
                 decoration: TextDecoration.underline,
                 decorationColor: AppColors.main_background_blue,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -271,57 +258,59 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  APPOINTMENTS SLIDER (Empty State)
+  //  SECTION HEADER WITH ICON (for Saved Clinics)
+  // ============================================================
+  Widget _buildSectionHeaderWithIcon({
+    required String title,
+    required VoidCallback onSeeAll,
+    required IconData icon,
+  }) {
+    return RepaintBoundary(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: Colors.black, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: FontHeading.heading4.copyWith(color: Colors.black),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+          GestureDetector(
+            onTap: onSeeAll,
+            child: Text(
+              'See all',
+              style: FontHeading.bodySmall.copyWith(
+                color: AppColors.main_background_blue,
+                decoration: TextDecoration.underline,
+                decorationColor: AppColors.main_background_blue,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============================================================
+  //  APPOINTMENTS SLIDER – Avatar + Text + Date/Time Row
   // ============================================================
   Widget _buildAppointmentsSlider(List<String> appointments) {
     if (appointments.isEmpty) {
-      return SizedBox(
-        width: double.infinity,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade200,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                width: 122,
-                height: 122,
-                child: Image.asset(
-                  Assets.assetsImagesEmptybox,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'No upcoming appointments',
-                style: FontHeading.body.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Your appointments will appear here',
-                style: FontHeading.bodySmall.copyWith(
-                  color: AppColors.customGray,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
+      return _buildEmptyState(
+        icon: Icons.calendar_today_outlined,
+        title: 'No upcoming appointments',
+        subtitle: 'Your appointments will appear here',
       );
     }
+
     return SizedBox(
       height: 120,
       child: ListView.builder(
@@ -329,253 +318,233 @@ class HomeScreen extends StatelessWidget {
         itemCount: appointments.length,
         itemBuilder: (context, index) {
           final text = appointments[index];
-          return Container(
-            width: 220,
-            margin: const EdgeInsets.only(right: 12),
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade200,
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.medical_services,
-                  color: AppColors.main_background_blue,
-                  size: 20,
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  text,
-                  style: FontHeading.body.copyWith(
-                    color: Colors.black,
-                    fontSize: 13,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
+          final parts = text.split(' – ');
+          final doctorName = parts.isNotEmpty ? parts[0] : '';
+          final followUp = parts.length > 1 ? parts[1] : '';
+          final dateTime = parts.length > 3 ? parts[3] : '';
+          final dateTimeParts = dateTime.split(' ');
+          final date = dateTimeParts.isNotEmpty ? dateTimeParts[0] : '';
+          final time = dateTimeParts.length > 1
+              ? dateTimeParts.sublist(1).join(' ')
+              : '';
 
-  // ============================================================
-  //  ALERTS (Simple Bullet List)
-  // ============================================================
-  List<Widget> _buildAlerts(List<String> alerts) {
-    if (alerts.isEmpty) {
-      return [const Text('No alerts')];
-    }
-    return alerts.map((text) {
-      return RepaintBoundary(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            children: [
-              const Icon(Icons.circle, color: Colors.red, size: 8),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  text,
-                  style: FontHeading.bodySmall.copyWith(color: Colors.black),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }).toList();
-  }
-
-  // ============================================================
-  //  CLINICS SLIDER (Horizontal Scroll)
-  // ============================================================
-  Widget _buildClinicsSlider(List<String> clinics) {
-    if (clinics.isEmpty) {
-      return SizedBox(
-        width: double.infinity,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade200,
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                width: 122,
-                height: 122,
-                child: Image.asset(
-                  Assets.assetsImagesEmptybox,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'you don’t have any saved clinics',
-                style: FontHeading.body.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'You’ll find here your saved clinics',
-                style: FontHeading.bodySmall.copyWith(
-                  color: AppColors.customGray,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return SizedBox(
-      height: 140,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: clinics.length,
-        itemBuilder: (context, index) {
-          final text = clinics[index];
-          return Container(
-            width: 200,
-            margin: const EdgeInsets.only(right: 12),
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade200,
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.local_hospital,
-                  color: AppColors.main_background_blue,
-                  size: 20,
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  text,
-                  style: FontHeading.body.copyWith(
-                    color: Colors.black,
-                    fontSize: 13,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  // ============================================================
-  //  HISTORY (Empty State + List)
-  // ============================================================
-  List<Widget> _buildHistory(List<Map<String, String>> history) {
-    if (history.isEmpty) {
-      return [
-        RepaintBoundary(
-          child: SizedBox(
-            width: double.infinity,
+          return RepaintBoundary(
             child: Container(
-              padding: const EdgeInsets.all(24),
+              width: 340,
+              margin: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.main_background_blue,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.shade200,
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
+                    color: Colors.grey.shade300,
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 122,
-                    height: 122,
-                    child: Image.asset(
-                      Assets.assetsImagesEmptybox,
-                      fit: BoxFit.contain,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 28,
+                        backgroundColor: Colors.white,
+                        backgroundImage: AssetImage(
+                          Assets.assetsImagesDoctorFolanAlfolani,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              doctorName,
+                              style: FontHeading.heading4.copyWith(
+                                color: Colors.white,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              followUp,
+                              style: FontHeading.bodySmall.copyWith(
+                                color: AppColors.customGray,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'you don’t have a visit history',
-                    style: FontHeading.body.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'You’ll find here the clinics you visited recently',
-                    style: FontHeading.bodySmall.copyWith(
-                      color: AppColors.customGray,
-                    ),
-                    textAlign: TextAlign.center,
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.calendar_today_outlined,
+                            size: 20,
+                            color: Colors.white70,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            date,
+                            style: FontHeading.bodySmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.access_time_outlined,
+                            size: 20,
+                            color: Colors.white70,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            time,
+                            style: FontHeading.bodySmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 83),
+                    ],
                   ),
                 ],
               ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // ============================================================
+  //  ALERTS – Using AppColors
+  // ============================================================
+  List<Widget> _buildAlerts(List<String> alerts) {
+    if (alerts.isEmpty) {
+      return [
+        RepaintBoundary(
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade200,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.notifications_off_outlined,
+                  size: 48,
+                  color: AppColors.customGray,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'No alerts',
+                  style: FontHeading.body.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'You\'re all caught up!',
+                  style: FontHeading.bodySmall.copyWith(
+                    color: AppColors.customGray,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ),
         ),
       ];
     }
-    return history.map((item) {
+
+    return alerts.map((text) {
+      final parts = text.split(' – ');
+      final time = parts.isNotEmpty ? parts[0] : '';
+      final message = parts.length > 1 ? parts[1] : '';
+
+      final bool isLate = message.toLowerCase().contains('late');
+
+      final Color bgColor = isLate
+          ? AppColors.alertRedBackground
+          : AppColors.alertYellowBackground;
+
+      final Color iconColor = isLate
+          ? Colors.red.shade400
+          : Colors.orange.shade400;
+
+      final Color bigTextColor = isLate
+          ? AppColors.alertRedBigText
+          : AppColors.alertYellowBigText;
+
+      final Color smallTextColor = isLate
+          ? AppColors.alertRedSmallText
+          : AppColors.alertYellowSmallText;
+
       return RepaintBoundary(
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          margin: const EdgeInsets.only(bottom: 8),
           decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border(
-              bottom: BorderSide(color: Colors.grey.shade100, width: 1),
-            ),
+            color: bgColor,
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(Icons.local_hospital, color: Colors.grey),
+              Stack(
+                children: [
+                  Icon(Icons.access_time_rounded, color: iconColor, size: 28),
+                  if (isLate)
+                    Positioned(
+                      bottom: -1,
+                      right: -2,
+                      child: Container(
+                        width: 14,
+                        height: 14,
+                        decoration: const BoxDecoration(
+                          color: AppColors.alertRedBackground,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '!',
+                            style: TextStyle(
+                              color: iconColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -583,25 +552,367 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item['clinic']!,
-                      style: FontHeading.body.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
+                      time,
+                      style: FontHeading.caption.copyWith(
+                        color: smallTextColor,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 2),
                     Text(
-                      item['location']!,
+                      message,
                       style: FontHeading.bodySmall.copyWith(
-                        color: AppColors.customGray,
+                        color: bigTextColor,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-              Text(
-                item['time']!,
-                style: FontHeading.bodySmall.copyWith(
-                  color: AppColors.customGray,
+              Icon(Icons.arrow_forward_ios, size: 14, color: smallTextColor),
+            ],
+          ),
+        ),
+      );
+    }).toList();
+  }
+
+  // ============================================================
+  //  CLINICS SLIDER – Full Card Design
+  // ============================================================
+  Widget _buildClinicsSlider(List<String> clinics) {
+    if (clinics.isEmpty) {
+      return _buildEmptyState(
+        image: Assets.assetsImagesEmptybox,
+        title: 'you don’t have any saved clinics',
+        subtitle: 'You’ll find here your saved clinics',
+      );
+    }
+
+    return SizedBox(
+      height: 250,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: clinics.length,
+        itemBuilder: (context, index) {
+          final text = clinics[index];
+          final parts = text.split(' – ');
+          final name = parts.isNotEmpty ? parts[0] : 'Clinic Name';
+          final specialty = parts.length > 1 ? parts[1] : 'Specialty';
+          final location = parts.length > 2 ? parts[2] : 'Location';
+          final hours = parts.length > 3 ? parts[3] : '9:00 - 5:00';
+
+          final bool isSaved = index % 2 == 0;
+
+          return RepaintBoundary(
+            child: Container(
+              width: 215,
+              margin: const EdgeInsets.only(right: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(12),
+                        ),
+                        child: Image.asset(
+                          Assets.assetsImagesClinicPlaceholder,
+                          width: 215,
+                          height: 135,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                          ),
+                          child: Icon(
+                            Icons.bookmark,
+                            color: isSaved
+                                ? AppColors.main_background_blue
+                                : AppColors.CustomgrayDark,
+                            size: 19,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8,
+                        left: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.main_background_white,
+                            borderRadius: BorderRadius.circular(117),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                '4.5',
+                                style: FontHeading.caption.copyWith(
+                                  color: AppColors.black,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(
+                                Icons.star,
+                                color: Colors.yellow.shade600,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8,
+                        right: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.main_background_white,
+                            borderRadius: BorderRadius.circular(117),
+                          ),
+                          child: Text(
+                            specialty,
+                            style: FontHeading.caption.copyWith(
+                              color: AppColors.black,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
+                    child: Text(
+                      name,
+                      style: FontHeading.body.copyWith(
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          color: AppColors.CustomgrayDark,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            location,
+                            style: FontHeading.bodySmall.copyWith(
+                              color: AppColors.CustomgrayDark,
+                              fontSize: 16,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 2, 12, 12),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.access_time_outlined,
+                          color: AppColors.CustomgrayDark,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            hours,
+                            style: FontHeading.bodySmall.copyWith(
+                              color: AppColors.CustomgrayDark,
+                              fontSize: 16,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // ============================================================
+  //  HISTORY – Full Card Design (Matches Clinics)
+  // ============================================================
+  List<Widget> _buildHistory(List<Map<String, String>> history) {
+    if (history.isEmpty) {
+      return [
+        RepaintBoundary(
+          child: _buildEmptyState(
+            image: Assets.assetsImagesEmptybox,
+            title: 'you don’t have a visit history',
+            subtitle: 'You’ll find here the clinics you visited recently',
+          ),
+        ),
+      ];
+    }
+
+    return history.asMap().entries.map((entry) {
+      final index = entry.key;
+      final item = entry.value;
+
+      final clinicName = item['clinic'] ?? 'Clinic Name';
+      final location = item['location'] ?? 'Location';
+      final time = item['time'] ?? 'Time';
+
+      final bool isSaved = index % 2 == 0;
+
+      return RepaintBoundary(
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade200,
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      Assets.assetsImagesClinicPlaceholder,
+                      width: 87,
+                      height: 87,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 6,
+                    left: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(4)),
+                      ),
+                      child: Icon(
+                        Icons.bookmark,
+                        color: isSaved
+                            ? AppColors.main_background_blue
+                            : AppColors.CustomgrayDark,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      clinicName,
+                      style: FontHeading.body.copyWith(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_outlined,
+                          color: AppColors.CustomgrayDark,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            location,
+                            style: FontHeading.bodySmall.copyWith(
+                              color: AppColors.CustomgrayDark,
+                              fontSize: 16,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.access_time_outlined,
+                          color: AppColors.CustomgrayDark,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          time,
+                          style: FontHeading.bodySmall.copyWith(
+                            color: AppColors.CustomgrayDark,
+                            fontSize: 16,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -609,5 +920,66 @@ class HomeScreen extends StatelessWidget {
         ),
       );
     }).toList();
+  }
+
+  // ============================================================
+  //  EMPTY STATE REUSABLE WIDGET (for consistency)
+  // ============================================================
+  Widget _buildEmptyState({
+    IconData? icon,
+    String? image,
+    required String title,
+    required String subtitle,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade200,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            if (image != null)
+              SizedBox(
+                width: 122,
+                height: 122,
+                child: Image.asset(image, fit: BoxFit.contain),
+              )
+            else if (icon != null)
+              Icon(icon, size: 48, color: AppColors.customGray),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: FontHeading.body.copyWith(
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: FontHeading.bodySmall.copyWith(
+                color: AppColors.customGray,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

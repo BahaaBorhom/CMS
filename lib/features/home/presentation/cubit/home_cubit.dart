@@ -16,30 +16,43 @@ class HomeCubit extends Cubit<HomeState> {
       state.copyWith(
         isLoading: false,
         appointments: [
-          // 'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
-          // 'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
-          // 'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
-          // 'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
+          'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
+          'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
+          'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
+          'Dr. Folan Al-Folani (Heart) – Follow up visit – Some clinic – 7/7/2026 9:15 AM',
         ],
         alerts: [
-          // '5 minutes ago – You\'re late for your appointment',
-          // '1 hour ago – Your next appointment is in 2 hours',
+          '5 minutes ago – You\'re late for your appointment',
+          '1 hour ago – Your next appointment is in 2 hours',
+          '1 day ago – Your next appointment is in 3 hours',
         ],
         clinics: [
-          // 'Some name clinic – Dentist – Damascus, Al-Mazzeh – 9:00 AM - 5:00 PM',
-          // 'Some name clinic – Dentist – Damascus, Al-Mazzeh – 9:30 AM - 5:00 PM',
+          'Some name clinic – Dentist – Damascus, Al-Mazzeh – 9:00 AM - 5:00 PM',
+          'Some name clinic – Dentist – Damascus, Al-Mazzeh – 9:30 AM - 5:00 PM',
+          'Some name clinic – Dentist – Damascus, Al-Mazzeh – 9:00 AM - 5:00 PM',
+          'Some name clinic – Dentist – Damascus, Al-Mazzeh – 9:30 AM - 5:00 PM',
         ],
         history: [
-          // {
-          //   'clinic': 'Some name clinic (Dentist)',
-          //   'location': 'Damascus, Al-Mazzeh',
-          //   'time': '3 months ago',
-          // },
-          // {
-          //   'clinic': 'Some name clinic (Dentist)',
-          //   'location': 'Damascus, Al-Mazzeh',
-          //   'time': '3 weeks ago',
-          // },
+          {
+            'clinic': 'Some name clinic (Dentist)',
+            'location': 'Damascus, Al-Mazzeh',
+            'time': '3 months ago',
+          },
+          {
+            'clinic': 'Some name clinic (Dentist)',
+            'location': 'Damascus, Al-Mazzeh',
+            'time': '3 weeks ago',
+          },
+          {
+            'clinic': 'Some name clinic (Dentist)',
+            'location': 'Damascus, Al-Mazzeh',
+            'time': '3 months ago',
+          },
+          {
+            'clinic': 'Some name clinic (Dentist)',
+            'location': 'Damascus, Al-Mazzeh',
+            'time': '3 months ago',
+          },
         ],
       ),
     );
