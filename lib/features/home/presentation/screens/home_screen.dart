@@ -2,8 +2,15 @@
 import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/features/home/domain/entities/alert.dart';
+import 'package:cms/features/home/domain/entities/appointment.dart';
+import 'package:cms/features/home/domain/entities/clinic.dart';
+import 'package:cms/features/home/domain/entities/history.dart';
 import 'package:cms/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/home_state.dart';
+import 'package:cms/features/home/presentation/screens/appointment_detail_screen.dart';
+import 'package:cms/features/home/presentation/screens/clinic_detail_screen.dart';
+import 'package:cms/features/home/presentation/screens/map_test_screen.dart';
 import 'package:cms/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -143,7 +150,9 @@ class HomeScreen extends StatelessWidget {
                   ),
                   child: Center(
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, MapTestScreen.routeName);
+                      },
                       icon: const Icon(
                         Icons.notifications_outlined,
                         color: AppColors.main_background_blue,
@@ -300,9 +309,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  APPOINTMENTS SLIDER – Avatar + Text + Date/Time Row
+  //  APPOINTMENTS SLIDER – Using Appointment objects
   // ============================================================
-  Widget _buildAppointmentsSlider(List<String> appointments) {
+  Widget _buildAppointmentsSlider(List<Appointment> appointments) {
     if (appointments.isEmpty) {
       return _buildEmptyState(
         icon: Icons.calendar_today_outlined,
@@ -317,113 +326,115 @@ class HomeScreen extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: appointments.length,
         itemBuilder: (context, index) {
-          final text = appointments[index];
-          final parts = text.split(' – ');
-          final doctorName = parts.isNotEmpty ? parts[0] : '';
-          final followUp = parts.length > 1 ? parts[1] : '';
-          final dateTime = parts.length > 3 ? parts[3] : '';
-          final dateTimeParts = dateTime.split(' ');
-          final date = dateTimeParts.isNotEmpty ? dateTimeParts[0] : '';
-          final time = dateTimeParts.length > 1
-              ? dateTimeParts.sublist(1).join(' ')
-              : '';
-
+          final appointment = appointments[index];
           return RepaintBoundary(
-            child: Container(
-              width: 340,
-              margin: const EdgeInsets.only(right: 12),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: AppColors.main_background_blue,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade300,
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 28,
-                        backgroundColor: Colors.white,
-                        backgroundImage: AssetImage(
-                          Assets.assetsImagesDoctorFolanAlfolani,
+            child: GestureDetector(
+               onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AppointmentDetailScreen(
+          appointment: appointment,
+        ),
+      ),
+    );
+  },
+              child: Container(
+                width: 340,
+                margin: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: AppColors.main_background_blue,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade300,
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 28,
+                          backgroundColor: Colors.white,
+                          backgroundImage: AssetImage(
+                            Assets.assetsImagesDoctorFolanAlfolani,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                appointment.doctorName,
+                                style: FontHeading.heading4.copyWith(
+                                  color: Colors.white,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                appointment.followUp ?? appointment.clinicName,
+                                style: FontHeading.bodySmall.copyWith(
+                                  color: AppColors.customGray,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Row(
                           children: [
-                            Text(
-                              doctorName,
-                              style: FontHeading.heading4.copyWith(
-                                color: Colors.white,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            Icon(
+                              Icons.calendar_today_outlined,
+                              size: 20,
+                              color: Colors.white70,
                             ),
+                            const SizedBox(width: 4),
                             Text(
-                              followUp,
-                              style: FontHeading.bodySmall.copyWith(
-                                color: AppColors.customGray,
-                              ),
+                              appointment.date,
+                              style: FontHeading.bodySmall,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_today_outlined,
-                            size: 20,
-                            color: Colors.white70,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            date,
-                            style: FontHeading.bodySmall,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.access_time_outlined,
-                            size: 20,
-                            color: Colors.white70,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            time,
-                            style: FontHeading.bodySmall,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 83),
-                    ],
-                  ),
-                ],
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.access_time_outlined,
+                              size: 20,
+                              color: Colors.white70,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              appointment.time,
+                              style: FontHeading.bodySmall,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(width: 83),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -433,9 +444,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  ALERTS – Using AppColors
+  //  ALERTS – Using Alert objects
   // ============================================================
-  List<Widget> _buildAlerts(List<String> alerts) {
+  List<Widget> _buildAlerts(List<Alert> alerts) {
     if (alerts.isEmpty) {
       return [
         RepaintBoundary(
@@ -485,12 +496,8 @@ class HomeScreen extends StatelessWidget {
       ];
     }
 
-    return alerts.map((text) {
-      final parts = text.split(' – ');
-      final time = parts.isNotEmpty ? parts[0] : '';
-      final message = parts.length > 1 ? parts[1] : '';
-
-      final bool isLate = message.toLowerCase().contains('late');
+    return alerts.map((alert) {
+      final bool isLate = alert.isLate;
 
       final Color bgColor = isLate
           ? AppColors.alertRedBackground
@@ -552,7 +559,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      time,
+                      alert.time,
                       style: FontHeading.caption.copyWith(
                         color: smallTextColor,
                       ),
@@ -561,7 +568,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      message,
+                      alert.message,
                       style: FontHeading.bodySmall.copyWith(
                         color: bigTextColor,
                       ),
@@ -580,9 +587,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  CLINICS SLIDER – Full Card Design
+  //  CLINICS SLIDER – Using Clinic Objects
   // ============================================================
-  Widget _buildClinicsSlider(List<String> clinics) {
+  Widget _buildClinicsSlider(List<Clinic> clinics) {
     if (clinics.isEmpty) {
       return _buildEmptyState(
         image: Assets.assetsImagesEmptybox,
@@ -597,181 +604,183 @@ class HomeScreen extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: clinics.length,
         itemBuilder: (context, index) {
-          final text = clinics[index];
-          final parts = text.split(' – ');
-          final name = parts.isNotEmpty ? parts[0] : 'Clinic Name';
-          final specialty = parts.length > 1 ? parts[1] : 'Specialty';
-          final location = parts.length > 2 ? parts[2] : 'Location';
-          final hours = parts.length > 3 ? parts[3] : '9:00 - 5:00';
-
-          final bool isSaved = index % 2 == 0;
+          final clinic = clinics[index];
 
           return RepaintBoundary(
-            child: Container(
-              width: 215,
-              margin: const EdgeInsets.only(right: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade200,
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ClinicDetailScreen(clinic: clinic),
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(12),
-                        ),
-                        child: Image.asset(
-                          Assets.assetsImagesClinicPlaceholder,
-                          width: 215,
-                          height: 135,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                );
+              },
+              child: Container(
+                width: 215,
+                margin: const EdgeInsets.only(right: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade200,
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(12),
                           ),
-                          child: Icon(
-                            Icons.bookmark,
-                            color: isSaved
-                                ? AppColors.main_background_blue
-                                : AppColors.CustomgrayDark,
-                            size: 19,
+                          child: Image.asset(
+                            Assets.assetsImagesClinicPlaceholder,
+                            width: 215,
+                            height: 135,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      ),
-                      Positioned(
-                        bottom: 8,
-                        left: 8,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(4),
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.bookmark,
+                              color: clinic.isSaved
+                                  ? AppColors.main_background_blue
+                                  : AppColors.CustomgrayDark,
+                              size: 19,
+                            ),
                           ),
-                          decoration: BoxDecoration(
-                            color: AppColors.main_background_white,
-                            borderRadius: BorderRadius.circular(117),
-                          ),
-                          child: Row(
-                            children: [
-                              Text(
-                                '4.5',
-                                style: FontHeading.caption.copyWith(
-                                  color: AppColors.black,
+                        ),
+                        Positioned(
+                          bottom: 8,
+                          left: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.main_background_white,
+                              borderRadius: BorderRadius.circular(117),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  clinic.rating.toString(),
+                                  style: FontHeading.caption.copyWith(
+                                    color: AppColors.black,
+                                  ),
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(width: 4),
-                              Icon(
-                                Icons.star,
-                                color: Colors.yellow.shade600,
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 8,
-                        right: 8,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.main_background_white,
-                            borderRadius: BorderRadius.circular(117),
-                          ),
-                          child: Text(
-                            specialty,
-                            style: FontHeading.caption.copyWith(
-                              color: AppColors.black,
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.yellow.shade600,
+                                  size: 16,
+                                ),
+                              ],
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
-                    child: Text(
-                      name,
-                      style: FontHeading.body.copyWith(
-                        color: Colors.black,
-                        fontSize: 20,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          color: AppColors.CustomgrayDark,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            location,
-                            style: FontHeading.bodySmall.copyWith(
-                              color: AppColors.CustomgrayDark,
-                              fontSize: 16,
+                        Positioned(
+                          bottom: 8,
+                          right: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            decoration: BoxDecoration(
+                              color: AppColors.main_background_white,
+                              borderRadius: BorderRadius.circular(117),
+                            ),
+                            child: Text(
+                              clinic.specialty,
+                              style: FontHeading.caption.copyWith(
+                                color: AppColors.black,
+                              ),
+                              maxLines: 1,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 2, 12, 12),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.access_time_outlined,
-                          color: AppColors.CustomgrayDark,
-                          size: 16,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
+                      child: Text(
+                        clinic.name,
+                        style: FontHeading.body.copyWith(
+                          color: Colors.black,
+                          fontSize: 20,
                         ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            hours,
-                            style: FontHeading.bodySmall.copyWith(
-                              color: AppColors.CustomgrayDark,
-                              fontSize: 16,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            color: AppColors.CustomgrayDark,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              clinic.location,
+                              style: FontHeading.bodySmall.copyWith(
+                                color: AppColors.CustomgrayDark,
+                                fontSize: 16,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 2, 12, 12),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.access_time_outlined,
+                            color: AppColors.CustomgrayDark,
+                            size: 16,
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              clinic.hours,
+                              style: FontHeading.bodySmall.copyWith(
+                                color: AppColors.CustomgrayDark,
+                                fontSize: 16,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -781,9 +790,9 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  HISTORY – Full Card Design (Matches Clinics)
+  //  HISTORY – Using History objects
   // ============================================================
-  List<Widget> _buildHistory(List<Map<String, String>> history) {
+  List<Widget> _buildHistory(List<History> history) {
     if (history.isEmpty) {
       return [
         RepaintBoundary(
@@ -796,15 +805,9 @@ class HomeScreen extends StatelessWidget {
       ];
     }
 
-    return history.asMap().entries.map((entry) {
-      final index = entry.key;
-      final item = entry.value;
-
-      final clinicName = item['clinic'] ?? 'Clinic Name';
-      final location = item['location'] ?? 'Location';
-      final time = item['time'] ?? 'Time';
-
-      final bool isSaved = index % 2 == 0;
+    return history.map((item) {
+      final bool isSaved =
+          item.id.hashCode % 2 == 0; // For demo: alternate saved state
 
       return RepaintBoundary(
         child: Container(
@@ -824,6 +827,7 @@ class HomeScreen extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // ---- Photo (87 x 87) with Save Icon ----
               Stack(
                 children: [
                   ClipRRect(
@@ -856,13 +860,14 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(width: 12),
+              // ---- Text Column ----
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      clinicName,
+                      item.clinicName,
                       style: FontHeading.body.copyWith(
                         color: Colors.black,
                         fontSize: 18,
@@ -871,6 +876,7 @@ class HomeScreen extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
+                    // Location
                     Row(
                       children: [
                         Icon(
@@ -881,7 +887,7 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            location,
+                            item.location,
                             style: FontHeading.bodySmall.copyWith(
                               color: AppColors.CustomgrayDark,
                               fontSize: 16,
@@ -893,6 +899,7 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 2),
+                    // Time Visited
                     Row(
                       children: [
                         Icon(
@@ -902,7 +909,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          time,
+                          item.timeVisited,
                           style: FontHeading.bodySmall.copyWith(
                             color: AppColors.CustomgrayDark,
                             fontSize: 16,

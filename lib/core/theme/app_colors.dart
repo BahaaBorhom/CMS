@@ -4,7 +4,9 @@ class AppColors {
   static const Color main_background_blue = Color(0xFF0B74FA);
   static const Color main_background_white = Colors.white;
   static const Color grayDark = Color(0xFF44454B);
-  static const Color CustomgrayDark = Color(0xFF6F7076);  // rgba(111, 112, 118, 1) – darker gray
+  static const Color CustomgrayDark = Color(
+    0xFF6F7076,
+  ); // rgba(111, 112, 118, 1) – darker gray
   static const Color black = Colors.black;
   static const Color customGray = Color(0xFFB6B7B9);
   // ---- Alert Colors ----
@@ -30,4 +32,7 @@ class AppColors {
   static Color alertRedIcon =
       Colors.red.shade400; // but you can define if you want
   static Color alertYellowIcon = Colors.orange.shade400;
+
+  static const Color green = Color(0xFF4CAF50); // rgba(76, 175, 80, 1)
+  static const Color yellowDark = Color(0xFFDA9C00); // rgba(218, 156, 0, 1)
 }

@@ -1,11 +1,15 @@
-// lib/features/home/presentation/cubit/home_state.dart
+import 'package:cms/features/home/domain/entities/alert.dart';
+import 'package:cms/features/home/domain/entities/appointment.dart';
+import 'package:cms/features/home/domain/entities/clinic.dart';
+import 'package:cms/features/home/domain/entities/history.dart';
+
 class HomeState {
   final bool isLoading;
   final String? errorMessage;
-  final List<String> appointments;
-  final List<String> alerts;
-  final List<String> clinics;
-  final List<Map<String, String>> history;
+  final List<Appointment> appointments;
+  final List<Alert> alerts;
+  final List<Clinic> clinics;
+  final List<History> history;
 
   const HomeState({
     this.isLoading = false,
@@ -19,10 +23,10 @@ class HomeState {
   HomeState copyWith({
     bool? isLoading,
     String? errorMessage,
-    List<String>? appointments,
-    List<String>? alerts,
-    List<String>? clinics,
-    List<Map<String, String>>? history,
+    List<Appointment>? appointments,
+    List<Alert>? alerts,
+    List<Clinic>? clinics,
+    List<History>? history,
   }) {
     return HomeState(
       isLoading: isLoading ?? this.isLoading,
