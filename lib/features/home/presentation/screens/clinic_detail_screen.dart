@@ -1,7 +1,7 @@
 import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
+import 'package:cms/core/entities/clinic.dart';
 import 'package:cms/core/theme/app_colors.dart';
-import 'package:cms/features/home/domain/entities/clinic.dart';
 import 'package:cms/features/home/presentation/screens/map_test_screen.dart';
 import 'package:flutter/material.dart';
 

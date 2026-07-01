@@ -1,7 +1,8 @@
-import 'package:cms/features/home/domain/entities/alert.dart';
-import 'package:cms/features/home/domain/entities/appointment.dart';
-import 'package:cms/features/home/domain/entities/clinic.dart';
-import 'package:cms/features/home/domain/entities/history.dart';
+
+import 'package:cms/core/entities/alert.dart';
+import 'package:cms/core/entities/appointment.dart';
+import 'package:cms/core/entities/clinic.dart';
+import 'package:cms/core/entities/history.dart';
 
 class HomeState {
   final bool isLoading;

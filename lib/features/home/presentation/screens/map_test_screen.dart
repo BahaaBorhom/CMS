@@ -1,7 +1,7 @@
 // lib/features/map/presentation/screens/map_test_screen.dart
+import 'package:cms/core/entities/clinic.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:cms/features/home/domain/entities/clinic.dart';
 
 class MapTestScreen extends StatefulWidget {
   static const routeName = '/map-test';

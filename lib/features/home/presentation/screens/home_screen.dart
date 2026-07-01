@@ -1,11 +1,11 @@
 // lib/features/home/presentation/screens/home_screen.dart
 import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
+import 'package:cms/core/entities/alert.dart';
+import 'package:cms/core/entities/appointment.dart';
+import 'package:cms/core/entities/clinic.dart';
+import 'package:cms/core/entities/history.dart';
 import 'package:cms/core/theme/app_colors.dart';
-import 'package:cms/features/home/domain/entities/alert.dart';
-import 'package:cms/features/home/domain/entities/appointment.dart';
-import 'package:cms/features/home/domain/entities/clinic.dart';
-import 'package:cms/features/home/domain/entities/history.dart';
 import 'package:cms/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/home_state.dart';
 import 'package:cms/features/home/presentation/screens/appointment_detail_screen.dart';
@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
             bottomRight: Radius.circular(24),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(20, 30, 20, 30),
+        padding: const EdgeInsets.fromLTRB(20, 30, 30, 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -142,8 +142,8 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 52,
-                  height: 52,
+                  width: 40,
+                  height: 40,
                   decoration: const BoxDecoration(
                     color: AppColors.main_background_white,
                     borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -329,16 +329,15 @@ class HomeScreen extends StatelessWidget {
           final appointment = appointments[index];
           return RepaintBoundary(
             child: GestureDetector(
-               onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AppointmentDetailScreen(
-          appointment: appointment,
-        ),
-      ),
-    );
-  },
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AppointmentDetailScreen(appointment: appointment),
+                  ),
+                );
+              },
               child: Container(
                 width: 340,
                 margin: const EdgeInsets.only(right: 12),
