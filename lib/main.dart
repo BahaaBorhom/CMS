@@ -1,5 +1,4 @@
 import 'package:cms/features/home/presentation/screens/home_screen.dart';
-import 'package:cms/features/home/presentation/screens/map_test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/injection_container.dart';
 
@@ -16,7 +15,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        MapTestScreen.routeName: (context) => const MapTestScreen(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
