@@ -102,9 +102,11 @@ class HomeScreen extends StatelessWidget {
         ),
         padding: const EdgeInsets.fromLTRB(20, 30, 30, 30),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, // ✅ Align top edges
               children: [
                 CircleAvatar(
                   radius: 26,
@@ -138,22 +140,24 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                // Notification button – now aligned at the top
                 Container(
                   width: 40,
                   height: 40,
+                  padding: EdgeInsets.zero,
                   decoration: const BoxDecoration(
                     color: AppColors.main_background_white,
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
-                  child: Center(
-                    child: IconButton(
-                      onPressed: () {
-                      },
-                      icon: const Icon(
-                        Icons.notifications_outlined,
-                        color: AppColors.main_background_blue,
-                        size: 28,
-                      ),
+                  child: IconButton(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    padding: EdgeInsets.zero,
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.notifications_outlined,
+                      color: AppColors.main_background_blue,
+                      size: 28,
                     ),
                   ),
                 ),
