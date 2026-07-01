@@ -142,12 +142,12 @@ class ClinicDetailScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MapTestScreen(clinic: clinic),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => MapTestScreen(clinic: clinic),
+                  //   ),
+                  // );
                 },
                 icon: const Icon(Icons.map, color: Colors.white),
                 label: const Text(

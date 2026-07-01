@@ -214,14 +214,14 @@ class AppointmentDetailScreen extends StatelessWidget {
                             ),
                             child: IconButton(
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MapTestScreen(
-                                      clinic: null, // Pass clinic if available
-                                    ),
-                                  ),
-                                );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => MapTestScreen(
+                                //       clinic: null, // Pass clinic if available
+                                //     ),
+                                //   ),
+                                // );
                               },
                               icon: Icon(
                                 Icons.map_outlined,

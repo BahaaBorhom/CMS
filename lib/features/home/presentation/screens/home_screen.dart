@@ -151,7 +151,6 @@ class HomeScreen extends StatelessWidget {
                   child: Center(
                     child: IconButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, MapTestScreen.routeName);
                       },
                       icon: const Icon(
                         Icons.notifications_outlined,
@@ -330,13 +329,13 @@ class HomeScreen extends StatelessWidget {
           return RepaintBoundary(
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        AppointmentDetailScreen(appointment: appointment),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) =>
+                //         AppointmentDetailScreen(appointment: appointment),
+                //   ),
+                // );
               },
               child: Container(
                 width: 340,
@@ -608,12 +607,12 @@ class HomeScreen extends StatelessWidget {
           return RepaintBoundary(
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ClinicDetailScreen(clinic: clinic),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => ClinicDetailScreen(clinic: clinic),
+                //   ),
+                // );
               },
               child: Container(
                 width: 215,
