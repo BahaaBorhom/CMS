@@ -1,4 +1,4 @@
-import 'package:cms/core/widgets/splash_screen.dart';
+import 'package:cms/features/auth/presentation/screens/splash_screen.dart';
 import 'package:cms/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:cms/features/auth/presentation/screens/home_screen.dart';
 import 'package:cms/features/auth/presentation/screens/login_screen.dart';
