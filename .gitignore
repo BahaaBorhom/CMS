@@ -4,12 +4,7 @@
 # Except for the .gitignore file itself (highly recommended)
 !.gitignore
 
-# Allow the pubspec.yaml file
-!pubspec.yaml
 
 # Allow the lib directory and everything inside it
 !lib/
 !lib/**
-
-!assets/
-!assets/**
