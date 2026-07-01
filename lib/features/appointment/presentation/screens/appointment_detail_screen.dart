@@ -18,103 +18,161 @@ class AppointmentDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          // ============================================================
-          //  SCROLLABLE CONTENT (fills remaining space)
-          // ============================================================
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ============================================================
-                  //  UPPER SHEET (Image + Status Badge)
-                  // ============================================================
-                  Stack(
-                    children: [
-                      // ---- Image (200 height) ----
-                      Container(
-                        height: 200,
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(Assets.assetsImagesReception),
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(16),
-                            bottomRight: Radius.circular(16),
-                          ),
-                        ),
-                      ),
-                      // ---- Status Badge (Top Left) ----
-                      Positioned(
-                        top: 30,
-                        left: 10,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.main_background_white,
-                            borderRadius: BorderRadius.circular(117),
-                          ),
-                          child: Text(
-                            'Confirmed',
-                            style: FontHeading.bodySmall.copyWith(
-                              color: AppColors.green,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ============================================================
+            //  SCROLLABLE CONTENT (fills remaining space)
+            // ============================================================
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ============================================================
+                    //  UPPER SHEET (Image + Status Badge)
+                    // ============================================================
+                    Stack(
+                      children: [
+                        // ---- Image (200 height) ----
+                        Container(
+                          height: 200,
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(Assets.assetsImagesReception),
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  // ============================================================
-                  //  DOCTOR INFO CARD (Overlapping the sheet bottom)
-                  // ============================================================
-                  Transform.translate(
-                    offset: const Offset(0, -40),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      padding: const EdgeInsets.all(16),
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade200,
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          // ---- Doctor Photo (SQUARE) ----
-                          SizedBox(
-                            width: 62,
-                            height: 62,
-                            child: ClipRect(
-                              // ✅ Square, no border radius
-                              child: Image.asset(
-                                Assets.assetsImagesDoctorFolanAlfolani,
-                                fit: BoxFit.cover,
+                        // ---- Status Badge (Top Left) ----
+                        Positioned(
+                          top: 30,
+                          left: 10,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.main_background_white,
+                              borderRadius: BorderRadius.circular(117),
+                            ),
+                            child: Text(
+                              'Confirmed',
+                              style: FontHeading.bodySmall.copyWith(
+                                color: AppColors.green,
                               ),
                             ),
                           ),
-                          const SizedBox(width: 14),
-                          // ---- Doctor Name + Date/Time ----
+                        ),
+                      ],
+                    ),
+                    // ============================================================
+                    //  DOCTOR INFO CARD (Overlapping the sheet bottom)
+                    // ============================================================
+                    Transform.translate(
+                      offset: const Offset(0, -40),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.all(16),
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade200,
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            // ---- Doctor Photo (SQUARE) ----
+                            SizedBox(
+                              width: 62,
+                              height: 62,
+                              child: ClipRect(
+                                // ✅ Square, no border radius
+                                child: Image.asset(
+                                  Assets.assetsImagesDoctorFolanAlfolani,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            // ---- Doctor Name + Date/Time ----
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    appointment.doctorName,
+                                    style: FontHeading.heading4.copyWith(
+                                      color: Colors.black,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_today_outlined,
+                                        color: AppColors.black,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        appointment.date,
+                                        style: FontHeading.bodySmall.copyWith(
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Icon(
+                                        Icons.access_time_outlined,
+                                        color: AppColors.black,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        appointment.time,
+                                        style: FontHeading.bodySmall.copyWith(
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // ============================================================
+                    //  CLINIC NAME + LOCATION + MAP BUTTON
+                    // ============================================================
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  appointment.doctorName,
-                                  style: FontHeading.heading4.copyWith(
+                                  appointment.clinicName,
+                                  style: FontHeading.heading3.copyWith(
                                     color: Colors.black,
                                   ),
                                   maxLines: 1,
@@ -124,28 +182,19 @@ class AppointmentDetailScreen extends StatelessWidget {
                                 Row(
                                   children: [
                                     Icon(
-                                      Icons.calendar_today_outlined,
-                                      color: AppColors.black,
-                                      size: 18,
+                                      Icons.location_on_outlined,
+                                      color: AppColors.main_background_blue,
+                                      size: 16,
                                     ),
                                     const SizedBox(width: 4),
-                                    Text(
-                                      appointment.date,
-                                      style: FontHeading.bodySmall.copyWith(
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Icon(
-                                      Icons.access_time_outlined,
-                                      color: AppColors.black,
-                                      size: 18,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      appointment.time,
-                                      style: FontHeading.bodySmall.copyWith(
-                                        color: AppColors.black,
+                                    Expanded(
+                                      child: Text(
+                                        'Damascus, Al-Mazzeh', // Replace with real location
+                                        style: FontHeading.bodySmall.copyWith(
+                                          color: AppColors.CustomgrayDark,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
@@ -153,217 +202,173 @@ class AppointmentDetailScreen extends StatelessWidget {
                               ],
                             ),
                           ),
+                          // ---- Map Button ----
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: AppColors.main_background_blue,
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                onPressed: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => MapTestScreen(
+                                  //       clinic: null, // Pass clinic if available
+                                  //     ),
+                                  //   ),
+                                  // );
+                                },
+                                icon: Icon(
+                                  Icons.map_outlined,
+                                  color: AppColors.main_background_white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                  // ============================================================
-                  //  CLINIC NAME + LOCATION + MAP BUTTON
-                  // ============================================================
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                appointment.clinicName,
-                                style: FontHeading.heading3.copyWith(
-                                  color: Colors.black,
+                    const SizedBox(height: 12),
+
+                    // ============================================================
+                    //  MINI MAP (Static, no interaction)
+                    // ============================================================
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: SizedBox(
+                          height: 175,
+                          width: double.infinity,
+                          child: GoogleMap(
+                            initialCameraPosition: CameraPosition(
+                              target: _clinicLocation,
+                              zoom: 15.0,
+                            ),
+                            markers: {
+                              Marker(
+                                markerId: const MarkerId('clinic'),
+                                position: _clinicLocation,
+                                infoWindow: const InfoWindow(
+                                  title: 'Clinic Location',
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                                icon: BitmapDescriptor.defaultMarkerWithHue(
+                                  BitmapDescriptor.hueBlue,
+                                ),
                               ),
-                              const SizedBox(height: 2),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on_outlined,
-                                    color: AppColors.main_background_blue,
-                                    size: 16,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: Text(
-                                      'Damascus, Al-Mazzeh', // Replace with real location
-                                      style: FontHeading.bodySmall.copyWith(
-                                        color: AppColors.CustomgrayDark,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                            },
+                            myLocationEnabled: false,
+                            zoomControlsEnabled: false,
+                            scrollGesturesEnabled: false,
+                            rotateGesturesEnabled: false,
+                            tiltGesturesEnabled: false,
+                            zoomGesturesEnabled: false,
+                            mapType: MapType.normal,
                           ),
                         ),
-                        // ---- Map Button ----
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: AppColors.main_background_blue,
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              onPressed: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => MapTestScreen(
-                                //       clinic: null, // Pass clinic if available
-                                //     ),
-                                //   ),
-                                // );
-                              },
-                              icon: Icon(
-                                Icons.map_outlined,
-                                color: AppColors.main_background_white,
-                                size: 20,
-                              ),
-                            ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // ============================================================
+                    //  DETAIL ROWS
+                    // ============================================================
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          _buildDetailRow(
+                            label: 'Visit type:',
+                            value: appointment.followUp ?? 'Follow-up visit',
+                            valueColor: AppColors.main_background_blue,
                           ),
+                          const SizedBox(height: 8),
+                          _buildDetailRow(
+                            label: 'Complexity:',
+                            value: 'Complex',
+                            valueColor: AppColors.yellowDark,
+                          ),
+                          const SizedBox(height: 8),
+                          _buildDetailRow(
+                            label: 'Status:',
+                            value: 'Confirmed',
+                            valueColor: Colors.green,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ), // extra padding at the bottom of scroll
+                  ],
+                ),
+              ),
+            ),
+            // ============================================================
+            //  BOTTOM BUTTONS (Invisible bottom sheet – no background, no shadow)
+            // ============================================================
+            Container(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 30),
+              color: Colors.transparent,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Added to calendar')),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.calendar_today,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        'Add to calendar',
+                        style: FontHeading.button,
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.main_background_blue,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
-
-                  // ============================================================
-                  //  MINI MAP (Static, no interaction)
-                  // ============================================================
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: SizedBox(
-                        height: 175,
-                        width: double.infinity,
-                        child: GoogleMap(
-                          initialCameraPosition: CameraPosition(
-                            target: _clinicLocation,
-                            zoom: 15.0,
-                          ),
-                          markers: {
-                            Marker(
-                              markerId: const MarkerId('clinic'),
-                              position: _clinicLocation,
-                              infoWindow: const InfoWindow(
-                                title: 'Clinic Location',
-                              ),
-                              icon: BitmapDescriptor.defaultMarkerWithHue(
-                                BitmapDescriptor.hueBlue,
-                              ),
-                            ),
-                          },
-                          myLocationEnabled: false,
-                          zoomControlsEnabled: false,
-                          scrollGesturesEnabled: false,
-                          rotateGesturesEnabled: false,
-                          tiltGesturesEnabled: false,
-                          zoomGesturesEnabled: false,
-                          mapType: MapType.normal,
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => _showCancelDialog(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red.shade50,
+                        foregroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
+                      ),
+                      child: Text(
+                        'Cancel appointment',
+                        style: FontHeading.button.copyWith(color: Colors.red),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-
-                  // ============================================================
-                  //  DETAIL ROWS
-                  // ============================================================
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        _buildDetailRow(
-                          label: 'Visit type:',
-                          value: appointment.followUp ?? 'Follow-up visit',
-                          valueColor: AppColors.main_background_blue,
-                        ),
-                        const SizedBox(height: 8),
-                        _buildDetailRow(
-                          label: 'Complexity:',
-                          value: 'Complex',
-                          valueColor: AppColors.yellowDark,
-                        ),
-                        const SizedBox(height: 8),
-                        _buildDetailRow(
-                          label: 'Status:',
-                          value: 'Confirmed',
-                          valueColor: Colors.green,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ), // extra padding at the bottom of scroll
                 ],
               ),
             ),
-          ),
-          // ============================================================
-          //  BOTTOM BUTTONS (Invisible bottom sheet – no background, no shadow)
-          // ============================================================
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 30),
-            color: Colors.transparent,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Added to calendar')),
-                      );
-                    },
-                    icon: const Icon(Icons.calendar_today, color: Colors.white),
-                    label: const Text(
-                      'Add to calendar',
-                      style: FontHeading.button,
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.main_background_blue,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => _showCancelDialog(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.shade50,
-                      foregroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'Cancel appointment',
-                      style: FontHeading.button.copyWith(color: Colors.red),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
