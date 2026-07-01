@@ -1,4 +1,4 @@
-import 'package:cms/core/widgets/splash_screen.dart';
+import 'package:cms/features/home/presentation/screens/home_screen.dart';
 import 'package:cms/features/home/presentation/screens/map_test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/injection_container.dart';
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       },
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const SplashScreen(),
+      home: const HomeScreen(),
     );
   }
 }
