@@ -1,3 +1,6 @@
+import 'package:cms/core/entities/appointment.dart';
+import 'package:cms/core/entities/clinic.dart';
+import 'package:cms/features/appointment/presentation/screens/appointment_detail_screen.dart';
 import 'package:cms/features/auth/presentation/screens/splash_screen.dart';
 import 'package:cms/features/auth/presentation/screens/login_screen.dart';
 import 'package:cms/features/auth/presentation/screens/signup_screen.dart';
@@ -5,7 +8,9 @@ import 'package:cms/features/auth/presentation/screens/forgot_password_screen.da
 import 'package:cms/features/auth/presentation/screens/otp_screen.dart';
 import 'package:cms/features/auth/presentation/screens/on_bording_screen.dart';
 import 'package:cms/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 import 'package:cms/features/home/presentation/screens/home_screen.dart';
+import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
 // import 'package:cms/features/appointment/presentation/screens/appointment_detail_screen.dart';
 // import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 // import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
@@ -34,38 +39,43 @@ class MyApp extends StatelessWidget {
           case '/welcome':
             return MaterialPageRoute(builder: (_) => const WelcomeScreen());
           case '/onboarding':
-            return MaterialPageRoute(builder: (_) =>  OnBordingScreen());
+            return MaterialPageRoute(builder: (_) => OnBordingScreen());
           case LoginScreen.routeName:
             return MaterialPageRoute(builder: (_) => const LoginScreen());
           case SignupScreen.routeName:
             return MaterialPageRoute(builder: (_) => const SignupScreen());
           case ForgotPasswordScreen.routeName:
-            return MaterialPageRoute(builder: (_) => const ForgotPasswordScreen());
+            return MaterialPageRoute(
+              builder: (_) => const ForgotPasswordScreen(),
+            );
           case OtpScreen.routeName:
             final phone = settings.arguments as String? ?? '';
-            return MaterialPageRoute(builder: (_) => OtpScreen(phoneNumber: phone));
+            return MaterialPageRoute(
+              builder: (_) => OtpScreen(phoneNumber: phone),
+            );
           case HomeScreen.routeName:
             return MaterialPageRoute(builder: (_) => const HomeScreen());
-          // case AppointmentDetailScreen.routeName:
-          //   final appointment = settings.arguments;
-          //   return MaterialPageRoute(
-          //     builder: (_) => AppointmentDetailScreen(appointment: appointment as Appointment),
-          //   );
-          // case ClinicDetailScreen.routeName:
-          //   final clinic = settings.arguments;
-          //   return MaterialPageRoute(
-          //     builder: (_) => ClinicDetailScreen(clinic: clinic as Clinic),
-          //   );
-          // case MapTestScreen.routeName:
-          //   final clinic = settings.arguments;
-          //   return MaterialPageRoute(
-          //     builder: (_) => MapTestScreen(clinic: clinic as Clinic?),
-          //   );
+          case AppointmentDetailScreen.routeName:
+            final appointment = settings.arguments;
+            return MaterialPageRoute(
+              builder: (_) => AppointmentDetailScreen(
+                appointment: appointment as Appointment,
+              ),
+            );
+          case ClinicDetailScreen.routeName:
+            final clinic = settings.arguments;
+            return MaterialPageRoute(
+              builder: (_) => ClinicDetailScreen(clinic: clinic as Clinic),
+            );
+          case MapTestScreen.routeName:
+            final clinic = settings.arguments;
+            return MaterialPageRoute(
+              builder: (_) => MapTestScreen(clinic: clinic as Clinic?),
+            );
           default:
             return MaterialPageRoute(
-              builder: (_) => const Scaffold(
-                body: Center(child: Text('Page not found')),
-              ),
+              builder: (_) =>
+                  const Scaffold(body: Center(child: Text('Page not found'))),
             );
         }
       },

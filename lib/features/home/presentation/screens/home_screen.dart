@@ -6,6 +6,8 @@ import 'package:cms/core/entities/appointment.dart';
 import 'package:cms/core/entities/clinic.dart';
 import 'package:cms/core/entities/history.dart';
 import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/features/appointment/presentation/screens/appointment_detail_screen.dart';
+import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 import 'package:cms/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/home_state.dart';
 import 'package:cms/injection_container.dart';
@@ -326,13 +328,13 @@ class HomeScreen extends StatelessWidget {
           return RepaintBoundary(
             child: GestureDetector(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) =>
-                //         AppointmentDetailScreen(appointment: appointment),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AppointmentDetailScreen(appointment: appointment),
+                  ),
+                );
               },
               child: Container(
                 width: 340,
@@ -604,12 +606,12 @@ class HomeScreen extends StatelessWidget {
           return RepaintBoundary(
             child: GestureDetector(
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => ClinicDetailScreen(clinic: clinic),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ClinicDetailScreen(clinic: clinic),
+                  ),
+                );
               },
               child: Container(
                 width: 215,

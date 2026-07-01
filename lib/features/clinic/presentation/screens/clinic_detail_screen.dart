@@ -2,6 +2,7 @@ import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/entities/clinic.dart';
 import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
 import 'package:flutter/material.dart';
 
 class ClinicDetailScreen extends StatelessWidget {
@@ -141,12 +142,12 @@ class ClinicDetailScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => MapTestScreen(clinic: clinic),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MapTestScreen(clinic: clinic),
+                    ),
+                  );
                 },
                 icon: const Icon(Icons.map, color: Colors.white),
                 label: const Text(

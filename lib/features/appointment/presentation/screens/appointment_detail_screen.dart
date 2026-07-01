@@ -2,6 +2,7 @@ import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/entities/appointment.dart';
 import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -213,14 +214,14 @@ class AppointmentDetailScreen extends StatelessWidget {
                             ),
                             child: IconButton(
                               onPressed: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => MapTestScreen(
-                                //       clinic: null, // Pass clinic if available
-                                //     ),
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MapTestScreen(
+                                      clinic: null, // Pass clinic if available
+                                    ),
+                                  ),
+                                );
                               },
                               icon: Icon(
                                 Icons.map_outlined,
