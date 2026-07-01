@@ -13,12 +13,12 @@ class MapModel extends Map {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    "data": data,
-  };
+  // Map<String, dynamic> toJson() => {
+  //   "data": data,
+  // };
 
-  factory MapModel.fromJson(Map<String, dynamic> json) => MapModel(
-    data: json["data"],
-  );
+  // factory MapModel.fromJson(Map<String, dynamic> json) => MapModel(
+  //   data: json["data"],
+  // );
 }
 
