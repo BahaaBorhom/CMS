@@ -49,23 +49,61 @@ class AppointmentDetailScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // ---- Status Badge (Top Left) ----
+                        // ---- Status Badge (Top Right) ----
+                        // ---- Status Badge (Top Right) ----
                         Positioned(
                           top: 30,
-                          left: 10,
+                          right: 10,
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 6,
+                              horizontal: 12,
+                              vertical: 2.5,
                             ),
                             decoration: BoxDecoration(
                               color: AppColors.main_background_white,
                               borderRadius: BorderRadius.circular(117),
                             ),
                             child: Text(
-                              'Confirmed',
+                              appointment.status,
                               style: FontHeading.bodySmall.copyWith(
-                                color: AppColors.green,
+                                color: _getStatusColor(
+                                  appointment.status,
+                                ), // ✅ Dynamic color
+                              ),
+                            ),
+                          ),
+                        ),
+                        // ---- Back Button (Top Left - NO PADDING) ----
+                        Positioned(
+                          top: 30,
+                          left: 10,
+                          child: GestureDetector(
+                            onTap: () => Navigator.pop(context),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.main_background_white,
+                                borderRadius: BorderRadius.circular(117),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.arrow_back,
+                                    color: AppColors.black,
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Back',
+                                    style: FontHeading.bodySmall.copyWith(
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -79,7 +117,7 @@ class AppointmentDetailScreen extends StatelessWidget {
                       offset: const Offset(0, -40),
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 16),
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         height: 80,
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -98,8 +136,10 @@ class AppointmentDetailScreen extends StatelessWidget {
                             SizedBox(
                               width: 62,
                               height: 62,
-                              child: ClipRect(
-                                // ✅ Square, no border radius
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  8,
+                                ), // Keeps it perfectly square
                                 child: Image.asset(
                                   Assets.assetsImagesDoctorFolanAlfolani,
                                   fit: BoxFit.cover,
@@ -121,7 +161,7 @@ class AppointmentDetailScreen extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: 2),
+                                  const SizedBox(height: 8),
                                   Row(
                                     children: [
                                       Icon(
@@ -297,8 +337,10 @@ class AppointmentDetailScreen extends StatelessWidget {
                           const SizedBox(height: 8),
                           _buildDetailRow(
                             label: 'Status:',
-                            value: 'Confirmed',
-                            valueColor: Colors.green,
+                            value: appointment.status,
+                            valueColor: _getStatusColor(
+                              appointment.status,
+                            ), // ✅ Dynamic color
                           ),
                         ],
                       ),
@@ -437,5 +479,20 @@ class AppointmentDetailScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+Color _getStatusColor(String status) {
+  final lowerStatus = status.toLowerCase();
+  if (lowerStatus.contains('confirmed') || lowerStatus.contains('done')) {
+    return AppColors.green; // Green for confirmed / done
+  } else if (lowerStatus.contains('pending') ||
+      lowerStatus.contains('rescheduled')) {
+    return AppColors.yellowDark; // Orange for pending / rescheduled
+  } else if (lowerStatus.contains('cancelled') ||
+      lowerStatus.contains('canceled')) {
+    return Colors.red; // Red for cancelled
+  } else {
+    return AppColors.customGray; // Default fallback
   }
 }
