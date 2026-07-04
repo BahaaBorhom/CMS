@@ -22,6 +22,7 @@ class HomeCubit extends Cubit<HomeState> {
         date: '7/7/2026',
         time: '9:15 AM',
         followUp: 'Follow up visit',
+        status: 'Confirmed',
       ),
       Appointment(
         id: '2',
@@ -31,6 +32,7 @@ class HomeCubit extends Cubit<HomeState> {
         date: '7/7/2026',
         time: '9:15 AM',
         followUp: 'Follow up visit',
+        status: 'Pending',
       ),
     ];
 
