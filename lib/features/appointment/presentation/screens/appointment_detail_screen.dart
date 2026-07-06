@@ -16,6 +16,11 @@ class AppointmentDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double offset =
+        (appointment.status.toLowerCase().contains('cancel') ||
+            appointment.status.toLowerCase().contains('rescheduled'))
+        ? -20
+        : -40;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -114,7 +119,7 @@ class AppointmentDetailScreen extends StatelessWidget {
                     //  DOCTOR INFO CARD (Overlapping the sheet bottom)
                     // ============================================================
                     Transform.translate(
-                      offset: const Offset(0, -40),
+                      offset: Offset(0, offset),
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -162,35 +167,75 @@ class AppointmentDetailScreen extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   const SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.calendar_today_outlined,
-                                        color: AppColors.black,
-                                        size: 18,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        appointment.date,
-                                        style: FontHeading.bodySmall.copyWith(
+                                  if (appointment.status.toLowerCase().contains(
+                                    'rescheduled',
+                                  )) ...[
+                                    // ---- Old Time (struck through) ----
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.calendar_today_outlined,
                                           color: AppColors.black,
+                                          size: 18,
                                         ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Icon(
-                                        Icons.access_time_outlined,
-                                        color: AppColors.black,
-                                        size: 18,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        appointment.time,
-                                        style: FontHeading.bodySmall.copyWith(
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '7 / 7 / 2026',
+                                          style: FontHeading.bodySmall.copyWith(
+                                            color: AppColors.black,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Icon(
+                                          Icons.access_time_outlined,
                                           color: AppColors.black,
+                                          size: 18,
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '9:15 AM',
+                                          style: FontHeading.bodySmall.copyWith(
+                                            color: AppColors.black,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ] else ...[
+                                    // Normal date/time (no strikethrough)
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.calendar_today_outlined,
+                                          color: AppColors.black,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          appointment.date,
+                                          style: FontHeading.bodySmall.copyWith(
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Icon(
+                                          Icons.access_time_outlined,
+                                          color: AppColors.black,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          appointment.time,
+                                          style: FontHeading.bodySmall.copyWith(
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ],
                               ),
                             ),
@@ -198,6 +243,24 @@ class AppointmentDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                    // ============================================================
+                    //  RESCHEDULED APPOINTMENT CARD (only if rescheduled)
+                    // ============================================================
+                    if (appointment.status.toLowerCase().contains(
+                      'rescheduled',
+                    )) ...[
+                      _buildRescheduledCard(),
+                    ],
+                    // ============================================================
+                    //  CANCELED APPOINTMENT CARD (only if canceled)
+                    // ============================================================
+                    if (appointment.status.toLowerCase().contains(
+                      'cancel',
+                    )) ...[
+                      _buildCanceledCard(),
+                    ],
+
                     // ============================================================
                     //  CLINIC NAME + LOCATION + MAP BUTTON
                     // ============================================================
@@ -328,23 +391,49 @@ class AppointmentDetailScreen extends StatelessWidget {
                             value: appointment.followUp ?? 'Follow-up visit',
                             valueColor: AppColors.main_background_blue,
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 16),
                           _buildDetailRow(
                             label: 'Complexity:',
                             value: 'Complex',
                             valueColor: AppColors.yellowDark,
                           ),
-                          const SizedBox(height: 8),
-                          _buildDetailRow(
-                            label: 'Status:',
-                            value: appointment.status,
-                            valueColor: _getStatusColor(
-                              appointment.status,
-                            ), // ✅ Dynamic color
-                          ),
+                          if (!(appointment.status.toLowerCase().contains(
+                                'cancel',
+                              ) ||
+                              appointment.status.toLowerCase().contains(
+                                'rescheduled',
+                              )))
+                            const SizedBox(height: 16),
+                          if (!(appointment.status.toLowerCase().contains(
+                                'cancel',
+                              ) ||
+                              appointment.status.toLowerCase().contains(
+                                'rescheduled',
+                              )))
+                            _buildDetailRow(
+                              label: 'Status:',
+                              value: appointment.status,
+                              valueColor: _getStatusColor(
+                                appointment.status,
+                              ), // ✅ Dynamic color
+                            ),
                         ],
                       ),
                     ),
+                    appointment.status == 'Pending'
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 4,
+                            ),
+                            child: Text(
+                              "Your appointment request is being reviewed by the clinic.",
+                              style: FontHeading.caption.copyWith(
+                                color: AppColors.customGray,
+                              ),
+                            ),
+                          )
+                        : Text(""),
                     const SizedBox(
                       height: 20,
                     ), // extra padding at the bottom of scroll
@@ -353,59 +442,194 @@ class AppointmentDetailScreen extends StatelessWidget {
               ),
             ),
             // ============================================================
-            //  BOTTOM BUTTONS (Invisible bottom sheet – no background, no shadow)
+            //  BOTTOM BUTTONS
             // ============================================================
             Container(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 30),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 50),
               color: Colors.transparent,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Added to calendar')),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.calendar_today,
-                        color: Colors.white,
-                      ),
-                      label: const Text(
-                        'Add to calendar',
-                        style: FontHeading.button,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.main_background_blue,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                  // ---- Conditional Buttons ----
+                  if (appointment.status.toLowerCase().contains('cancel')) ...[
+                    // Canceled – no buttons
+                  ] else if (appointment.status.toLowerCase().contains(
+                        'done',
+                      ) ||
+                      appointment.status.toLowerCase().contains(
+                        'completed',
+                      )) ...[
+                    // ---- Book new appointment (Done) ----
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Booking new appointment'),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.calendar_today,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          'Book new appointment',
+                          style: FontHeading.button,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.main_background_blue,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => _showCancelDialog(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red.shade50,
-                        foregroundColor: Colors.red,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                    const SizedBox(height: 12),
+                    // ---- Rate this appointment ----
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Rate this appointment'),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.main_background_blue
+                              .withValues(alpha: 0.2),
+                          foregroundColor: AppColors.main_background_blue,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          shadowColor: Colors.transparent,
+                        ),
+                        child: Text(
+                          'Rate this appointment',
+                          style: FontHeading.button.copyWith(
+                            color: AppColors.main_background_blue,
+                          ),
                         ),
                       ),
-                      child: Text(
-                        'Cancel appointment',
-                        style: FontHeading.button.copyWith(color: Colors.red),
+                    ),
+                  ] else if (appointment.status.toLowerCase().contains(
+                    'rescheduled',
+                  )) ...[
+                    // ---- Accept new appointment ----
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Accepted new appointment'),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.calendar_today,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        label: const Text(
+                          'Accept new appointment',
+                          style: FontHeading.button,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.main_background_blue,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    // ---- Request another time ----
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Request another time'),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.main_background_blue
+                              .withValues(alpha: 0.1),
+                          foregroundColor: AppColors.main_background_blue,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          shadowColor: Colors.transparent,
+                        ),
+                        child: Text(
+                          'Request another time',
+                          style: FontHeading.button.copyWith(
+                            color: AppColors.main_background_blue,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ] else ...[
+                    // ---- Add to Calendar (default) ----
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Added to calendar')),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.calendar_today,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          'Add to calendar',
+                          style: FontHeading.button,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.main_background_blue,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // ---- Cancel appointment ----
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => _showCancelDialog(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red.shade50,
+                          foregroundColor: Colors.red,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'Cancel appointment',
+                          style: FontHeading.button.copyWith(color: Colors.red),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -435,12 +659,15 @@ class AppointmentDetailScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2.5),
           decoration: BoxDecoration(
-            color: valueColor.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+            color: valueColor.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(117),
           ),
-          child: Text(
-            value,
-            style: FontHeading.bodySmall.copyWith(color: valueColor),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2.5),
+            child: Text(
+              value,
+              style: FontHeading.bodySmall.copyWith(color: valueColor),
+            ),
           ),
         ),
       ],
@@ -467,13 +694,13 @@ class AppointmentDetailScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Appointment cancelled'),
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColors.red,
                 ),
               );
             },
             child: const Text(
               'Yes, Cancel',
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: AppColors.red),
             ),
           ),
         ],
@@ -488,11 +715,109 @@ Color _getStatusColor(String status) {
     return AppColors.green; // Green for confirmed / done
   } else if (lowerStatus.contains('pending') ||
       lowerStatus.contains('rescheduled')) {
-    return AppColors.yellowDark; // Orange for pending / rescheduled
+    return AppColors.red; // Orange for pending / rescheduled
+  } else if (lowerStatus.contains('rescheduled')) {
+    return AppColors.orange; // Orange for rescheduled
   } else if (lowerStatus.contains('cancelled') ||
       lowerStatus.contains('canceled')) {
-    return Colors.red; // Red for cancelled
+    return AppColors.red; // Red for cancelled
   } else {
     return AppColors.customGray; // Default fallback
   }
+}
+
+Widget _buildCanceledCard() {
+  return Container(
+    height: 80, // ✅ increased to fit larger avatar
+    margin: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    decoration: BoxDecoration(
+      color: AppColors.alertRedBackground,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center, // ✅ vertically center
+      children: [
+        // ---- Avatar (Larger) ----
+        CircleAvatar(
+          radius: 28, // ✅ bigger than before (was 46? that was too big)
+          backgroundColor: AppColors.red.withOpacity(0.15),
+          child: const Icon(Icons.close, color: AppColors.red, size: 24),
+        ),
+        const SizedBox(width: 13),
+        // ---- Text Column ----
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Appointment canceled',
+                style: FontHeading.caption.copyWith(
+                  color: AppColors.alertRedSmallText,
+                ),
+              ),
+              Text(
+                'Doctor not available',
+                style: FontHeading.bodySmall.copyWith(
+                  color: AppColors.alertRedBigText,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildRescheduledCard() {
+  return Container(
+    height: 112,
+    margin: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    decoration: BoxDecoration(
+      color: AppColors.orange.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Column(
+          children: [
+            CircleAvatar(
+              radius: 28,
+              backgroundColor: AppColors.orange.withValues(alpha: 0.1),
+              child: const Icon(Icons.close, color: AppColors.orange, size: 24),
+            ),
+            Spacer(),
+          ],
+        ),
+        const SizedBox(width: 13),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Appointment Rescheduled',
+                style: FontHeading.caption.copyWith(
+                  color: AppColors.orangeSmallText,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Your appointment has rescheduled From \n 7 / 7 / 2026 at 9:15 AM\n to 7 / 7 / 2026 at 9:30 AM',
+                style: FontHeading.bodySmall.copyWith(
+                  color: AppColors.orangeBigText,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 }

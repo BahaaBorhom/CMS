@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           date: "12/12/2023",
           doctorName: "TestName",
           time: "12:00",
-          status: "cancelled",
+          status: "Rescheduled",
           id: "1",
           specialty: "TestName",
         ),
