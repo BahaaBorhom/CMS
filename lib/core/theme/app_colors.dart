@@ -35,4 +35,9 @@ class AppColors {
 
   static const Color green = Color(0xFF4CAF50); // rgba(76, 175, 80, 1)
   static const Color yellowDark = Color(0xFFDA9C00); // rgba(218, 156, 0, 1)
+  static const Color red = Colors.red;
+  // ---- Orange ----
+  static const Color orange = Color(0xFFF54900); // rgba(245, 73, 0, 1)
+  static const Color orangeSmallText = Color(0xFFB65F38); // rgba(182, 95, 56, 1)
+  static const Color orangeBigText = Color(0xFF904123);   // rgba(144, 65, 35, 1)
 }
