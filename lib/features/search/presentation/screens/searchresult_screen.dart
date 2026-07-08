@@ -4,8 +4,6 @@ import 'package:cms/core/entities/clinic.dart';
 import 'package:cms/core/theme/app_colors.dart';
 import 'package:cms/features/search/presentation/cubit/searchresult_cubit.dart';
 import 'package:cms/features/search/presentation/cubit/searchresult_state.dart';
-import 'package:cms/features/search/presentation/screens/search_screen.dart';
-import 'package:cms/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,14 +20,15 @@ class SearchResultsScreen extends StatefulWidget {
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
   final FocusNode _focusNode = FocusNode();
 
-  @override
-  void initState() {
-    super.initState();
-    // Trigger search when screen loads
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SearchResultsCubit>().search(widget.query);
-    });
-  }
+ @override
+void initState() {
+  super.initState();
+
+  // ✅ Wait until after the first frame so the provider is ready
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    context.read<SearchResultsCubit>().search(widget.query);
+  });
+}
 
   @override
   void dispose() {
@@ -39,9 +38,11 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<SearchResultsCubit>(),
-      child: Scaffold(
+    return 
+    // BlocProvider(
+    //   create: (context) => getIt<SearchResultsCubit>(),
+    //   child: 
+      Scaffold(
         backgroundColor: AppColors.lightGray,
         body: SafeArea(
           child: Column(
@@ -116,7 +117,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             ],
           ),
         ),
-      ),
+      // ),
     );
   }
 
