@@ -1,7 +1,9 @@
 import 'package:cms/features/search/presentation/screens/search_screen.dart';
+import 'package:cms/injection_container.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  init();
   runApp(const MyApp());
 }
 
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const SearchScreen(),
+      home: SearchScreen(),
     );
   }
 }

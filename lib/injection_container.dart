@@ -1,17 +1,9 @@
+// lib/injection_container.dart
+import 'package:cms/features/search/inject_search.dart';
 import 'package:get_it/get_it.dart';
 
-final GetIt getIt = GetIt.instance;
+final getIt = GetIt.instance;
 
-// how to use
-/**
- * Future.wait([
-    ServiceLocator().setup(),
-    ]).then((value) {
-    runApp(const MyApp());
-    });
- * **/
-class ServiceLocator {
-  Future<void> setup() async {
-    
-  }
+Future<void> init() async {
+  injectSearch();
 }
