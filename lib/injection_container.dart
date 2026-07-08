@@ -1,9 +1,13 @@
 // lib/injection_container.dart
+import 'package:cms/features/appointment/inject_appointment.dart';
 import 'package:cms/features/auth/data/data_sources/local/language_data_source.dart';
 import 'package:cms/features/auth/data/repositories/language_repository_imp.dart';
 import 'package:cms/features/auth/domain/use_cases/change_language_use_case.dart';
 import 'package:cms/features/auth/inject_auth.dart';
+import 'package:cms/features/clinic/inject_clinic.dart';
 import 'package:cms/features/home/inject_home.dart';
+import 'package:cms/features/map/inject_map.dart';
+import 'package:cms/features/search/inject_search.dart';
 // import 'package:cms/features/home/inject_home.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,4 +51,8 @@ Future<void> init() async {
   // (LoginCubit, OtpCubit, AuthLocalDataSource, etc.)
   initAuthInjection();
   injectHome();
+  injectAppointment();
+  injectClinic();
+  injectMap();
+  injectSearch();
 }
