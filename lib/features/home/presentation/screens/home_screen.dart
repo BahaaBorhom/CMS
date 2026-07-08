@@ -100,7 +100,7 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSearchBar(),
+                    _buildSearchBar(context),
                     const SizedBox(height: 20),
 
                     if (state.appointments.isNotEmpty) ...[
@@ -329,7 +329,7 @@ class HomeScreen extends StatelessWidget {
   // ============================================================
   //  SEARCH BUTTON + FILTER BUTTON
   // ============================================================
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(BuildContext context) {
     return RepaintBoundary(
       child: Row(
         children: [
@@ -337,8 +337,12 @@ class HomeScreen extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                // TODO: Navigate to search screen
-                print('Search button tapped');
+              //  Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => const SearchScreen(),
+              //     ),
+              //   );
               },
               child: Container(
                 height: 48,
