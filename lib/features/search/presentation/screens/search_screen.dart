@@ -3,6 +3,7 @@ import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/theme/app_colors.dart';
 import 'package:cms/features/search/presentation/cubit/search_cubit.dart';
 import 'package:cms/features/search/presentation/cubit/search_state.dart';
+import 'package:cms/features/search/presentation/cubit/searchresult_cubit.dart';
 import 'package:cms/features/search/presentation/screens/searchresult_screen.dart';
 import 'package:cms/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -161,12 +162,18 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
                     onSubmitted: (value) {
                       if (value.trim().isNotEmpty) {
-                        context.read<SearchCubit>().addRecentSearch(value);
+                        context.read<SearchCubit>().addRecentSearch(
+                          value.trim(),
+                        );
+                        final query = value.trim(); // 👈 This is your query
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                SearchResultsScreen(query: value.trim()),
+                            builder: (context) => BlocProvider(
+                              create: (_) =>
+                                  getIt<SearchResultsCubit>()..search(query),
+                              child: SearchResultsScreen(query: query),
+                            ),
                           ),
                         );
                       }
@@ -204,10 +211,14 @@ class _SearchScreenState extends State<SearchScreen> {
         child: GestureDetector(
           onTap: () {
             context.read<SearchCubit>().addRecentSearch(item);
+            final query = item; // 👈 This is your query
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SearchResultsScreen(query: item),
+                builder: (context) => BlocProvider(
+                  create: (_) => getIt<SearchResultsCubit>()..search(query),
+                  child: SearchResultsScreen(query: query),
+                ),
               ),
             );
           },
