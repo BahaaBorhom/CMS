@@ -35,4 +35,11 @@ class AppColors {
 
   static const Color green = Color(0xFF4CAF50); // rgba(76, 175, 80, 1)
   static const Color yellowDark = Color(0xFFDA9C00); // rgba(218, 156, 0, 1)
+
+
+
+
+
+
+  static const Color lightGray = Color(0xFFF2F2F2); // rgba(242, 242, 242, 1)
 }
