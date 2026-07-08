@@ -1,27 +1,27 @@
-
-enum SearchStatus {
-  initial,
-  loading,
-  loaded,
-  error,
-}
-
 class SearchState {
-  final SearchStatus status;
-  final String? errorMessage;
+  final String query;
+  final List<String> recentSearches;
+  final List<String> popularSearches;
+  final bool isLoading;
 
   const SearchState({
-    required this.status,
-    this.errorMessage,
+    this.query = '',
+    this.recentSearches = const [],
+    this.popularSearches = const [],
+    this.isLoading = false,
   });
 
   SearchState copyWith({
-    SearchStatus? status,
-    String? errorMessage,
+    String? query,
+    List<String>? recentSearches,
+    List<String>? popularSearches,
+    bool? isLoading,
   }) {
     return SearchState(
-      status: status ?? this.status,
-      errorMessage: errorMessage ?? this.errorMessage,
+      query: query ?? this.query,
+      recentSearches: recentSearches ?? this.recentSearches,
+      popularSearches: popularSearches ?? this.popularSearches,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 }

@@ -11,6 +11,8 @@ import 'package:cms/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 import 'package:cms/features/home/presentation/screens/home_screen.dart';
 import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
+import 'package:cms/features/search/presentation/screens/search_screen.dart';
+import 'package:cms/features/search/presentation/screens/searchresult_screen.dart';
 // import 'package:cms/features/appointment/presentation/screens/appointment_detail_screen.dart';
 // import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 // import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
@@ -71,6 +73,13 @@ class MyApp extends StatelessWidget {
             final clinic = settings.arguments;
             return MaterialPageRoute(
               builder: (_) => MapTestScreen(clinic: clinic as Clinic?),
+            );
+          case SearchScreen.routeName:
+            return MaterialPageRoute(builder: (_) => const SearchScreen());
+          case SearchResultsScreen.routeName:
+            final query = settings.arguments as String? ?? '';
+            return MaterialPageRoute(
+              builder: (context) => SearchResultsScreen(query: query),
             );
           default:
             return MaterialPageRoute(
