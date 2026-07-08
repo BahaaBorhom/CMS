@@ -12,6 +12,7 @@ import 'package:cms/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/home_state.dart';
 import 'package:cms/features/home/presentation/cubit/navigation_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/navigation_state.dart';
+import 'package:cms/features/search/presentation/screens/search_screen.dart';
 import 'package:cms/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -337,12 +338,10 @@ class HomeScreen extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-              //  Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => const SearchScreen(),
-              //     ),
-              //   );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SearchScreen()),
+                );
               },
               child: Container(
                 height: 48,
