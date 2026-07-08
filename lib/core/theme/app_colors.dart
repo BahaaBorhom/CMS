@@ -40,4 +40,5 @@ class AppColors {
   static const Color orange = Color(0xFFF54900); // rgba(245, 73, 0, 1)
   static const Color orangeSmallText = Color(0xFFB65F38); // rgba(182, 95, 56, 1)
   static const Color orangeBigText = Color(0xFF904123);   // rgba(144, 65, 35, 1)
+  static const Color lightGray = Color(0xFFF2F2F2); // rgba(242, 242, 242, 1)
 }

@@ -10,6 +10,8 @@ import 'package:cms/features/appointment/presentation/screens/appointment_detail
 import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 import 'package:cms/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/home_state.dart';
+import 'package:cms/features/home/presentation/cubit/navigation_cubit.dart';
+import 'package:cms/features/home/presentation/cubit/navigation_state.dart';
 import 'package:cms/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,67 +21,58 @@ class HomeScreen extends StatelessWidget {
 
   const HomeScreen({super.key});
 
+  final List<IconData> _icons = const [
+    Icons.home_outlined,
+    Icons.location_on_outlined,
+    Icons.bookmark_border,
+    Icons.calendar_month_outlined,
+    Icons.person_outline,
+  ];
+
+  final List<IconData> _activeIcons = const [
+    Icons.home_outlined,
+    Icons.location_on_outlined,
+    Icons.bookmark_border,
+    Icons.calendar_month_outlined,
+    Icons.person_outline,
+  ];
+
+  final List<String> _labels = const [
+    'Home',
+    'Map',
+    'Saved',
+    'Books',
+    'Profile',
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<HomeCubit>()..loadHomeData(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => getIt<HomeCubit>()..loadHomeData()),
+        BlocProvider(create: (context) => getIt<NavigationCubit>()),
+      ],
       child: Scaffold(
-        backgroundColor: AppColors.main_background_white,
-        body: BlocBuilder<HomeCubit, HomeState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            return CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(child: _buildBlueHeader(context)),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSearchBar(),
-                        const SizedBox(height: 20),
-
-                        if (state.appointments.isNotEmpty) ...[
-                          _buildSectionHeader(
-                            title: 'Upcoming appointments',
-                            onSeeAll: () {},
-                          ),
-                          const SizedBox(height: 12),
-                          _buildAppointmentsSlider(state.appointments),
-                          const SizedBox(height: 24),
-                        ],
-
-                        if (state.alerts.isNotEmpty) ...[
-                          _buildSectionHeader(title: 'Alerts', onSeeAll: () {}),
-                          const SizedBox(height: 12),
-                          ..._buildAlerts(state.alerts),
-                          const SizedBox(height: 24),
-                        ],
-
-                        _buildSectionHeaderWithIcon(
-                          title: 'Saved clinics',
-                          onSeeAll: () {},
-                          icon: Icons.bookmark,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildClinicsSlider(state.clinics),
-                        const SizedBox(height: 24),
-
-                        _buildSectionHeader(
-                          title: 'Visit history',
-                          onSeeAll: () {},
-                        ),
-                        const SizedBox(height: 12),
-                        ..._buildHistory(state.history),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
+        backgroundColor: Colors.white,
+        body: BlocBuilder<NavigationCubit, NavigationState>(
+          builder: (context, navState) {
+            return Column(
+              children: [
+                // ---- Main Content ----
+                Expanded(
+                  child: IndexedStack(
+                    index: navState.selectedIndex,
+                    children: [
+                      _buildHomeTab(context),
+                      _buildPlaceholderTab('Map', Icons.map),
+                      _buildPlaceholderTab('Saved', Icons.bookmark),
+                      _buildPlaceholderTab('Books', Icons.book),
+                      _buildPlaceholderTab('Profile', Icons.person),
+                    ],
                   ),
                 ),
+                // ---- Bottom Navigation Bar ----
+                _buildBottomNavBar(context, navState.selectedIndex),
               ],
             );
           },
@@ -89,7 +82,171 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  BLUE HEADER
+  //  HOME TAB
+  // ============================================================
+  Widget _buildHomeTab(BuildContext context) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        if (state.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(child: _buildBlueHeader(context)),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSearchBar(),
+                    const SizedBox(height: 20),
+
+                    if (state.appointments.isNotEmpty) ...[
+                      _buildSectionHeader(
+                        title: 'Upcoming appointments',
+                        onSeeAll: () {},
+                      ),
+                      const SizedBox(height: 12),
+                      _buildAppointmentsSlider(state.appointments),
+                      const SizedBox(height: 24),
+                    ],
+
+                    if (state.alerts.isNotEmpty) ...[
+                      _buildSectionHeader(title: 'Alerts', onSeeAll: () {}),
+                      const SizedBox(height: 12),
+                      ..._buildAlerts(state.alerts),
+                      const SizedBox(height: 24),
+                    ],
+
+                    _buildSectionHeaderWithIcon(
+                      title: 'Saved clinics',
+                      onSeeAll: () {},
+                      icon: Icons.bookmark,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildClinicsSlider(state.clinics),
+                    const SizedBox(height: 24),
+
+                    _buildSectionHeader(
+                      title: 'Visit history',
+                      onSeeAll: () {},
+                    ),
+                    const SizedBox(height: 12),
+                    ..._buildHistory(state.history),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // ============================================================
+  //  PLACEHOLDER TABS
+  // ============================================================
+  Widget _buildPlaceholderTab(String title, IconData icon) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 64, color: AppColors.customGray),
+            const SizedBox(height: 16),
+            Text(
+              '$title Screen',
+              style: FontHeading.heading1.copyWith(color: AppColors.customGray),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Coming soon...',
+              style: FontHeading.body.copyWith(color: AppColors.customGray),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ============================================================
+  //  BOTTOM NAVIGATION BAR
+  // ============================================================
+  Widget _buildBottomNavBar(BuildContext context, int selectedIndex) {
+    return Container(
+      height: 70,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: List.generate(5, (index) {
+          final bool isSelected = selectedIndex == index;
+
+          return Expanded(
+            child: GestureDetector(
+              onTap: () {
+                context.read<NavigationCubit>().selectTab(index);
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // ---- Blue Thick Line ----
+                  Container(
+                    height: 4,
+                    width: 30,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.main_background_blue
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  // ---- Icon ----
+                  Icon(
+                    isSelected ? _activeIcons[index] : _icons[index],
+                    color: isSelected
+                        ? AppColors.main_background_blue
+                        : AppColors.CustomgrayDark,
+                    size: 26,
+                  ),
+                  const SizedBox(height: 2),
+                  // ---- Label ----
+                  Text(
+                    _labels[index],
+                    style: FontHeading.bodySmall.copyWith(
+                      color: isSelected
+                          ? AppColors.main_background_blue
+                          : AppColors.CustomgrayDark,
+                      fontSize: 10,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  // ============================================================
+  //  BLUE HEADER (unchanged)
   // ============================================================
   Widget _buildBlueHeader(BuildContext context) {
     return RepaintBoundary(
@@ -107,8 +264,7 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
-              crossAxisAlignment:
-                  CrossAxisAlignment.center, // ✅ Align top edges
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CircleAvatar(
                   radius: 26,
@@ -142,7 +298,6 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Notification button – now aligned at the top
                 Container(
                   width: 40,
                   height: 40,
@@ -172,39 +327,48 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  SEARCH BAR + FILTER BUTTON
+  //  SEARCH BUTTON + FILTER BUTTON
   // ============================================================
   Widget _buildSearchBar() {
     return RepaintBoundary(
       child: Row(
         children: [
+          // ---- Search Button (looks like a search bar) ----
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(53),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade200,
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search clinics, doctors...',
-                  hintStyle: FontHeading.body.copyWith(
-                    color: AppColors.customGray,
-                  ),
-                  prefixIcon: Icon(Icons.search, color: AppColors.customGray),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
+            child: GestureDetector(
+              onTap: () {
+                // TODO: Navigate to search screen
+                print('Search button tapped');
+              },
+              child: Container(
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.lightGray,
+                  borderRadius: BorderRadius.circular(53),
+                ),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 16),
+                    Icon(Icons.search, color: AppColors.black, size: 24),
+                    const SizedBox(width: 8),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Search clinics, doctors, specialty...',
+                        style: FontHeading.bodySmall.copyWith(
+                          color: AppColors.customGray,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const Spacer(),
+                  ],
                 ),
               ),
             ),
           ),
           const SizedBox(width: 12),
+          // ---- Filter Button ----
           Container(
             decoration: BoxDecoration(
               color: AppColors.main_background_blue,
@@ -234,7 +398,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  SECTION HEADER
+  //  SECTION HEADER (unchanged)
   // ============================================================
   Widget _buildSectionHeader({
     required String title,
@@ -269,7 +433,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  SECTION HEADER WITH ICON (for Saved Clinics)
+  //  SECTION HEADER WITH ICON (unchanged)
   // ============================================================
   Widget _buildSectionHeaderWithIcon({
     required String title,
@@ -311,7 +475,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  APPOINTMENTS SLIDER – Using Appointment objects
+  //  APPOINTMENTS SLIDER (unchanged)
   // ============================================================
   Widget _buildAppointmentsSlider(List<Appointment> appointments) {
     if (appointments.isEmpty) {
@@ -445,7 +609,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  ALERTS – Using Alert objects
+  //  ALERTS (unchanged)
   // ============================================================
   List<Widget> _buildAlerts(List<Alert> alerts) {
     if (alerts.isEmpty) {
@@ -588,7 +752,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  CLINICS SLIDER – Using Clinic Objects
+  //  CLINICS SLIDER (unchanged)
   // ============================================================
   Widget _buildClinicsSlider(List<Clinic> clinics) {
     if (clinics.isEmpty) {
@@ -791,7 +955,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  HISTORY – Using History objects
+  //  HISTORY (unchanged)
   // ============================================================
   List<Widget> _buildHistory(List<History> history) {
     if (history.isEmpty) {
@@ -807,8 +971,7 @@ class HomeScreen extends StatelessWidget {
     }
 
     return history.map((item) {
-      final bool isSaved =
-          item.id.hashCode % 2 == 0; // For demo: alternate saved state
+      final bool isSaved = item.id.hashCode % 2 == 0;
 
       return RepaintBoundary(
         child: Container(
@@ -828,7 +991,6 @@ class HomeScreen extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ---- Photo (87 x 87) with Save Icon ----
               Stack(
                 children: [
                   ClipRRect(
@@ -861,7 +1023,6 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(width: 12),
-              // ---- Text Column ----
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -877,7 +1038,6 @@ class HomeScreen extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    // Location
                     Row(
                       children: [
                         Icon(
@@ -900,7 +1060,6 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 2),
-                    // Time Visited
                     Row(
                       children: [
                         Icon(
@@ -931,7 +1090,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  EMPTY STATE REUSABLE WIDGET (for consistency)
+  //  EMPTY STATE (unchanged)
   // ============================================================
   Widget _buildEmptyState({
     IconData? icon,

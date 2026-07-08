@@ -1,3 +1,5 @@
+import 'package:cms/features/home/presentation/cubit/navigation_cubit.dart';
+
 import '../../injection_container.dart';
 import 'data/data_sources/remote/home_remote_data_source.dart';
 import 'data/repositories/home_repository_impl.dart';
@@ -9,6 +11,9 @@ import 'presentation/cubit/home_cubit.dart';
 injectHome() {
   // cubit
   getIt.registerFactory(() => HomeCubit());
+
+  // cubit
+  getIt.registerFactory(() => NavigationCubit());
 
   // Repository
   getIt.registerLazySingleton<HomeRepository>(
