@@ -1,3 +1,4 @@
+// lib/features/search_results/presentation/screens/search_results_screen.dart
 import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/entities/clinic.dart';
@@ -7,117 +8,90 @@ import 'package:cms/features/search/presentation/cubit/searchresult_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SearchResultsScreen extends StatefulWidget {
+class SearchResultsScreen extends StatelessWidget {
   static const routeName = '/search-results';
   final String query;
 
   const SearchResultsScreen({super.key, required this.query});
 
   @override
-  State<SearchResultsScreen> createState() => _SearchResultsScreenState();
-}
-
-class _SearchResultsScreenState extends State<SearchResultsScreen> {
-  final FocusNode _focusNode = FocusNode();
-
- @override
-void initState() {
-  super.initState();
-
-  // ✅ Wait until after the first frame so the provider is ready
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    context.read<SearchResultsCubit>().search(widget.query);
-  });
-}
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return 
-    // BlocProvider(
-    //   create: (context) => getIt<SearchResultsCubit>(),
-    //   child: 
-      Scaffold(
-        backgroundColor: AppColors.lightGray,
-        body: SafeArea(
-          child: Column(
-            children: [
-              // ============================================================
-              //  BLUE HEADER (Same as Home Screen + Search Bar)
-              // ============================================================
-              _buildBlueHeader(context),
-              // ============================================================
-              //  BODY (Search Results)
-              // ============================================================
-              Expanded(
-                child: BlocBuilder<SearchResultsCubit, SearchResultsState>(
-                  builder: (context, state) {
-                    if (state.isLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
+    // The cubit is already provided by the parent (Navigation)
+    return Scaffold(
+      backgroundColor: AppColors.lightGray,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ============================================================
+            //  BLUE HEADER (Same as Home Screen + Search Button)
+            // ============================================================
+            _buildBlueHeader(context),
+            // ============================================================
+            //  BODY (Search Results)
+            // ============================================================
+            Expanded(
+              child: BlocBuilder<SearchResultsCubit, SearchResultsState>(
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-                    if (state.results.isEmpty && state.query.isNotEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.search_off_outlined,
-                              size: 64,
-                              color: AppColors.customGray,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'No results found for "${state.query}"',
-                              style: FontHeading.body.copyWith(
-                                color: AppColors.customGray,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
+                  if (state.results.isEmpty && state.query.isNotEmpty) {
+                    return Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if (state.query.isNotEmpty) ...[
-                            Text(
-                              'Search results:',
-                              style: FontHeading.heading4.copyWith(
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: state.results.length,
-                              itemBuilder: (context, index) {
-                                final clinic = state.results[index];
-                                return _buildClinicCard(clinic);
-                              },
+                          Icon(
+                            Icons.search_off_outlined,
+                            size: 64,
+                            color: AppColors.customGray,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No results found for "${state.query}"',
+                            style: FontHeading.body.copyWith(
+                              color: AppColors.customGray,
                             ),
                           ),
                         ],
                       ),
                     );
-                  },
-                ),
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (state.results.isNotEmpty) ...[
+                          Text(
+                            'Search results:',
+                            style: FontHeading.heading4.copyWith(
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: state.results.length,
+                            itemBuilder: (context, index) {
+                              final clinic = state.results[index];
+                              return _buildClinicCard(clinic);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      // ),
+      ),
     );
   }
 
@@ -177,60 +151,47 @@ void initState() {
             ],
           ),
           const SizedBox(height: 12),
-          // ---- Search Bar (Auto-focus) ----
-          Container(
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: BlocBuilder<SearchResultsCubit, SearchResultsState>(
-              builder: (context, state) {
-                return TextField(
-                  focusNode: _focusNode,
-                  autofocus: true,
-                  controller: TextEditingController(text: state.query),
-                  onChanged: (value) {
-                    // Update search as user types
-                    context.read<SearchResultsCubit>().search(value);
-                  },
-                  onSubmitted: (value) {
-                    if (value.trim().isNotEmpty) {
-                      context.read<SearchResultsCubit>().search(value);
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Search clinics, doctors, specialty...',
-                    hintStyle: FontHeading.body.copyWith(
-                      color: AppColors.customGray,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: AppColors.customGray,
-                      size: 20,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                    suffixIcon: state.query.isNotEmpty
-                        ? IconButton(
-                            padding: EdgeInsets.zero,
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onPressed: () {
-                              context.read<SearchResultsCubit>().clearResults();
-                              // Also clear the text field
-                              // We need to update the controller manually
-                            },
-                            icon: Icon(
-                              Icons.close,
-                              color: AppColors.customGray,
-                              size: 18,
-                            ),
-                          )
-                        : null,
+          // ---- Search Button (Navigates back to Search Screen) ----
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context); // Go back to SearchScreen
+            },
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 16),
+                  Icon(
+                    Icons.search,
+                    color: AppColors.customGray,
+                    size: 20,
                   ),
-                );
-              },
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Search clinics, doctors, specialty...',
+                      style: FontHeading.body.copyWith(
+                        color: AppColors.customGray,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const Spacer(),
+                  // Small arrow to indicate it's a button
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColors.customGray,
+                      size: 14,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 4),
@@ -260,15 +221,37 @@ void initState() {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ---- Photo (87 x 87) ----
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              Assets.assetsImagesClinicPlaceholder,
-              width: 87,
-              height: 87,
-              fit: BoxFit.cover,
-            ),
+          // ---- Photo (87 x 87) with Bookmark Icon ----
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  Assets.assetsImagesClinicPlaceholder,
+                  width: 87,
+                  height: 87,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                top: 6,
+                left: 6,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                  ),
+                  child: Icon(
+                    clinic.isSaved ? Icons.bookmark : Icons.bookmark_border,
+                    color: clinic.isSaved
+                        ? AppColors.main_background_blue
+                        : AppColors.CustomgrayDark,
+                    size: 16,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(width: 12),
           // ---- Text Column ----
@@ -287,7 +270,7 @@ void initState() {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                // Location
+                // ---- Location ----
                 Row(
                   children: [
                     Icon(
@@ -310,7 +293,7 @@ void initState() {
                   ],
                 ),
                 const SizedBox(height: 2),
-                // Specialty / Hours
+                // ---- Specialty / Hours ----
                 Row(
                   children: [
                     Icon(
@@ -333,7 +316,7 @@ void initState() {
                   ],
                 ),
                 const SizedBox(height: 2),
-                // Rating (optional)
+                // ---- Rating (optional) ----
                 Row(
                   children: [
                     Icon(
@@ -352,17 +335,6 @@ void initState() {
                   ],
                 ),
               ],
-            ),
-          ),
-          // ---- Bookmark Icon (top-right of card) ----
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Icon(
-              clinic.isSaved ? Icons.bookmark : Icons.bookmark_border,
-              color: clinic.isSaved
-                  ? AppColors.main_background_blue
-                  : AppColors.CustomgrayDark,
-              size: 20,
             ),
           ),
         ],

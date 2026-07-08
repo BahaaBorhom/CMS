@@ -165,14 +165,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         context.read<SearchCubit>().addRecentSearch(
                           value.trim(),
                         );
-                        final query = value.trim(); // 👈 This is your query
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => BlocProvider(
                               create: (_) =>
-                                  getIt<SearchResultsCubit>()..search(query),
-                              child: SearchResultsScreen(query: query),
+                                  getIt<SearchResultsCubit>()
+                                    ..search(value.trim()),
+                              child: SearchResultsScreen(query: value.trim()),
                             ),
                           ),
                         );
@@ -210,8 +210,8 @@ class _SearchScreenState extends State<SearchScreen> {
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: GestureDetector(
           onTap: () {
-            context.read<SearchCubit>().addRecentSearch(item);
-            final query = item; // 👈 This is your query
+            final query = item;
+            context.read<SearchCubit>().addRecentSearch(query);
             Navigator.push(
               context,
               MaterialPageRoute(
