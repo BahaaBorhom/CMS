@@ -18,7 +18,7 @@ class AppointmentDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double offset =
-        (appointment.status.toLowerCase().contains('cancel') ||
+        (appointment.status.toLowerCase().contains('cancelled') ||
             appointment.status.toLowerCase().contains('rescheduled'))
         ? -20
         : -40;
@@ -257,8 +257,11 @@ class AppointmentDetailScreen extends StatelessWidget {
                     //  CANCELED APPOINTMENT CARD (only if canceled)
                     // ============================================================
                     if (appointment.status.toLowerCase().contains(
-                      'cancel',
-                    )) ...[
+                          'cancelled',
+                        ) ||
+                        appointment.status.toLowerCase().contains(
+                          'canceled',
+                        )) ...[
                       _buildCanceledCard(),
                     ],
 
@@ -398,15 +401,21 @@ class AppointmentDetailScreen extends StatelessWidget {
                             value: 'Complex',
                             valueColor: AppColors.yellowDark,
                           ),
-                          if (!(appointment.status.toLowerCase().contains(
-                                'cancel',
-                              ) ||
+                          if (!((appointment.status.toLowerCase().contains(
+                                    'cancelled',
+                                  ) ||
+                                  appointment.status.toLowerCase().contains(
+                                    'canceled',
+                                  )) ||
                               appointment.status.toLowerCase().contains(
                                 'rescheduled',
                               )))
                             const SizedBox(height: 16),
                           if (!(appointment.status.toLowerCase().contains(
-                                'cancel',
+                                'cancelled',
+                              ) ||
+                              appointment.status.toLowerCase().contains(
+                                'canceled',
                               ) ||
                               appointment.status.toLowerCase().contains(
                                 'rescheduled',
@@ -452,8 +461,39 @@ class AppointmentDetailScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // ---- Conditional Buttons ----
-                  if (appointment.status.toLowerCase().contains('cancel')) ...[
-                    // Canceled – no buttons
+                  if (appointment.status.toLowerCase().contains('cancelled') ||
+                      appointment.status.toLowerCase().contains(
+                        'canceled',
+                      )) ...[
+                    // ---- Book new appointment (Cancelled) ----
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Requesting new appointment'),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.calendar_today,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          'Request new appointment',
+                          style: FontHeading.button,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.main_background_blue,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
                   ] else if (appointment.status.toLowerCase().contains(
                         'done',
                       ) ||
@@ -587,11 +627,16 @@ class AppointmentDetailScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Added to calendar')),
-                          );
-                        },
+                        onPressed:
+                            appointment.status.toLowerCase().contains('pending')
+                            ? null
+                            : () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Added to calendar'),
+                                  ),
+                                );
+                              },
                         icon: const Icon(
                           Icons.calendar_today,
                           color: Colors.white,
@@ -607,6 +652,9 @@ class AppointmentDetailScreen extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          disabledBackgroundColor: AppColors
+                              .main_background_blue
+                              .withOpacity(0.2),
                         ),
                       ),
                     ),
@@ -754,7 +802,7 @@ Widget _buildCanceledCard() {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Appointment canceled',
+                'Appointment cancelled',
                 style: FontHeading.caption.copyWith(
                   color: AppColors.alertRedSmallText,
                 ),
