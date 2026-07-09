@@ -1,14 +1,14 @@
 class FilterState {
   final String? location;
   final String? specialty;
-  final String? rating;
+  final double? selectedRating; // 👈 New: null = no rating filter
   final String? sortBy;
   final bool hasChanges;
 
   const FilterState({
     this.location,
     this.specialty = 'All',
-    this.rating = 'Any rating',
+    this.selectedRating,
     this.sortBy = 'Popular',
     this.hasChanges = false,
   });
@@ -16,14 +16,14 @@ class FilterState {
   FilterState copyWith({
     String? location,
     String? specialty,
-    String? rating,
+    double? selectedRating,
     String? sortBy,
     bool? hasChanges,
   }) {
     return FilterState(
       location: location ?? this.location,
       specialty: specialty ?? this.specialty,
-      rating: rating ?? this.rating,
+      selectedRating: selectedRating ?? this.selectedRating,
       sortBy: sortBy ?? this.sortBy,
       hasChanges: hasChanges ?? this.hasChanges,
     );
