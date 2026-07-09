@@ -358,7 +358,7 @@ class HomeScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        'Search clinics, doctors, specialty...',
+                        'Search clinics, doctors...',
                         style: FontHeading.bodySmall.copyWith(
                           color: AppColors.customGray,
                         ),
