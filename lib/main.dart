@@ -1,3 +1,5 @@
+import 'package:cms/core/entities/clinic.dart';
+import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,7 +32,18 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: ClinicDetailScreen(clinic: Clinic(
+        id: '1',
+        name: 'Al-Mazzeh Medical Center',
+        specialty: 'General Medicine',
+        location: 'Damascus, Al-Mazzeh',
+        hours: '9:00 AM - 5:00 PM',
+        latitude: 33.5138,
+        longitude: 36.2765,
+        rating: 4.8,
+        isSaved: true,
+      ),
+      ),
     );
   }
 }
