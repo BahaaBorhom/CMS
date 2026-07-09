@@ -5,6 +5,7 @@ import 'package:cms/core/entities/clinic.dart';
 import 'package:cms/core/theme/app_colors.dart';
 import 'package:cms/features/search/presentation/cubit/searchresult_cubit.dart';
 import 'package:cms/features/search/presentation/cubit/searchresult_state.dart';
+import 'package:cms/features/search/presentation/screens/filter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -203,7 +204,7 @@ class SearchResultsScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'Search clinics, doctors, specialty...',
+                          'Search clinics, doctors...',
                           style: FontHeading.bodySmall.copyWith(
                             color: AppColors.customGray,
                           ),
@@ -232,7 +233,12 @@ class SearchResultsScreen extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {
-                  print('Filter button pressed');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FilterScreen(),
+                    ),
+                  );
                 },
                 icon: Icon(
                   Icons.filter_list,

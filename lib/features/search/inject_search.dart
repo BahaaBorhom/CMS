@@ -1,3 +1,4 @@
+import 'package:cms/features/search/presentation/cubit/filter_cubit.dart';
 import 'package:cms/features/search/presentation/cubit/searchresult_cubit.dart';
 
 import '../../injection_container.dart';
@@ -13,6 +14,7 @@ injectSearch() {
   // getIt.registerFactory(() => SearchCubit(searchUseCase: getIt()));
   getIt.registerFactory<SearchResultsCubit>(() => SearchResultsCubit());
   getIt.registerFactory<SearchCubit>(() => SearchCubit());
+  getIt.registerFactory<FilterCubit>(() => FilterCubit());
   
 
   // Repository
