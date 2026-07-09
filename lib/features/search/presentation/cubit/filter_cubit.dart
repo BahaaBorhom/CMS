@@ -12,8 +12,8 @@ class FilterCubit extends Cubit<FilterState> {
     emit(state.copyWith(specialty: specialty, hasChanges: true));
   }
 
-  void setRating(String rating) {
-    emit(state.copyWith(rating: rating, hasChanges: true));
+  void setRating(double? rating) {
+    emit(state.copyWith(selectedRating: rating, hasChanges: true));
   }
 
   void setSortBy(String sortBy) {
@@ -25,7 +25,7 @@ class FilterCubit extends Cubit<FilterState> {
   }
 
   void applyFilters() {
-    // Emit state with hasChanges = false (or navigate back)
+    // Emit with hasChanges = false (or navigate back)
     emit(state.copyWith(hasChanges: false));
   }
 }
