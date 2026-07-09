@@ -64,13 +64,11 @@ class _SearchScreenState extends State<SearchScreen> {
                             // ---- Recent Searches ----
                             if (state.recentSearches.isNotEmpty) ...[
                               const SizedBox(height: 20),
-                              _buildSectionHeader(
-                                title: 'Recent searches:',
-                                onClear: () {
-                                  context
-                                      .read<SearchCubit>()
-                                      .clearRecentSearches();
-                                },
+                              Text(
+                                'Recent searches:',
+                                style: FontHeading.bodySmall.copyWith(
+                                  color: AppColors.customGray,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               ..._buildSearchItems(
@@ -88,7 +86,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            ..._buildSearchItems(
+                            ..._buildPopularSearchItems(
                               state.popularSearches,
                               context,
                             ),
@@ -136,9 +134,10 @@ class _SearchScreenState extends State<SearchScreen> {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onPressed: () => Navigator.pop(context),
+              // onPressed: () => Navigator.pushReplacementNamed(context, HomeScreen.routeName),
               icon: const Icon(
                 Icons.arrow_back,
-                color: AppColors.main_background_blue,
+                color: AppColors.black,
                 size: 20,
               ),
             ),
@@ -224,12 +223,12 @@ class _SearchScreenState extends State<SearchScreen> {
           },
           child: Row(
             children: [
-              Icon(Icons.search, color: AppColors.customGray, size: 16),
+              Icon(Icons.history, color: AppColors.CustomgrayDark, size: 20),
               const SizedBox(width: 10),
               Text(item, style: FontHeading.body.copyWith(color: Colors.black)),
               const Spacer(),
               // Small arrow (optional – for popular items)
-              // Icon(Icons.arrow_forward_ios, size: 12, color: AppColors.customGray),
+              Icon(Icons.call_made, size: 20, color: AppColors.CustomgrayDark),
             ],
           ),
         ),
@@ -237,28 +236,39 @@ class _SearchScreenState extends State<SearchScreen> {
     }).toList();
   }
 
-  // ============================================================
-  //  SECTION HEADER (with Clear button)
-  // ============================================================
-  Widget _buildSectionHeader({required String title, VoidCallback? onClear}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: FontHeading.heading4.copyWith(color: AppColors.customGray),
-        ),
-        if (onClear != null)
-          GestureDetector(
-            onTap: onClear,
-            child: Text(
-              'Clear',
-              style: FontHeading.bodySmall.copyWith(
-                color: AppColors.main_background_blue,
+  List<Widget> _buildPopularSearchItems(
+    List<String> items,
+    BuildContext context,
+  ) {
+    return items.map((item) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: GestureDetector(
+          onTap: () {
+            final query = item;
+            context.read<SearchCubit>().addRecentSearch(query);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (_) => getIt<SearchResultsCubit>()..search(query),
+                  child: SearchResultsScreen(query: query),
+                ),
               ),
-            ),
+            );
+          },
+          child: Row(
+            children: [
+              Icon(Icons.search, color: AppColors.CustomgrayDark, size: 20),
+              const SizedBox(width: 10),
+              Text(item, style: FontHeading.body.copyWith(color: Colors.black)),
+              const Spacer(),
+              // Small arrow (optional – for popular items)
+              Icon(Icons.call_made, size: 20, color: AppColors.CustomgrayDark),
+            ],
           ),
-      ],
-    );
+        ),
+      );
+    }).toList();
   }
 }

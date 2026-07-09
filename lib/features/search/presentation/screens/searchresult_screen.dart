@@ -26,6 +26,8 @@ class SearchResultsScreen extends StatelessWidget {
             //  BLUE HEADER (Same as Home Screen + Search Button)
             // ============================================================
             _buildBlueHeader(context),
+            const SizedBox(height: 12),
+            _buildSearchBar(context),
             // ============================================================
             //  BODY (Search Results)
             // ============================================================
@@ -33,9 +35,7 @@ class SearchResultsScreen extends StatelessWidget {
               child: BlocBuilder<SearchResultsCubit, SearchResultsState>(
                 builder: (context, state) {
                   if (state.isLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   if (state.results.isEmpty && state.query.isNotEmpty) {
@@ -96,132 +96,169 @@ class SearchResultsScreen extends StatelessWidget {
   }
 
   // ============================================================
-  //  BLUE HEADER (Matches Home Screen)
+  //  BLUE HEADER (unchanged)
   // ============================================================
   Widget _buildBlueHeader(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-      decoration: BoxDecoration(
-        color: AppColors.main_background_blue,
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(24),
-          bottomRight: Radius.circular(24),
+    return RepaintBoundary(
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.main_background_blue,
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(24),
+            bottomRight: Radius.circular(24),
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ---- Top Row: Avatar + Name + "View my records" ----
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 26,
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage(
-                  Assets.assetsImagesUserFolanAlfolani,
+        padding: const EdgeInsets.fromLTRB(20, 30, 30, 30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 26,
+                  backgroundColor: Colors.white,
+                  backgroundImage: AssetImage(
+                    Assets.assetsImagesUserFolanAlfolani,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Folan Al-Folani',
-                      style: FontHeading.heading1.copyWith(
-                        fontSize: 18,
-                        color: Colors.white,
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Folan Al-Folani',
+                        style: FontHeading.heading1.copyWith(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      'View my records',
-                      style: FontHeading.bodySmall.copyWith(
-                        color: Colors.white70,
+                      Text(
+                        'View my records',
+                        style: FontHeading.bodySmall.copyWith(
+                          color: Colors.white70,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          // ---- Search Button (Navigates back to Search Screen) ----
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context); // Go back to SearchScreen
-            },
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 16),
-                  Icon(
-                    Icons.search,
-                    color: AppColors.customGray,
-                    size: 20,
+                Container(
+                  width: 40,
+                  height: 40,
+                  padding: EdgeInsets.zero,
+                  decoration: const BoxDecoration(
+                    color: AppColors.main_background_white,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Search clinics, doctors, specialty...',
-                      style: FontHeading.body.copyWith(
-                        color: AppColors.customGray,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                  child: IconButton(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    padding: EdgeInsets.zero,
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.notifications_outlined,
+                      color: AppColors.main_background_blue,
+                      size: 28,
                     ),
                   ),
-                  const Spacer(),
-                  // Small arrow to indicate it's a button
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: AppColors.customGray,
-                      size: 14,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 4),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  // ============================================================
-  //  CLINIC CARD (Matches History Card in Home Screen)
-  // ============================================================
+  // ---- Search Button (Navigates back to Search Screen) ----
+  Widget _buildSearchBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: RepaintBoundary(
+        child: Row(
+          children: [
+            // ---- Search Button (looks like a search bar) ----
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context); // Navigate back to the search screen
+                },
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: AppColors.main_background_white,
+                    borderRadius: BorderRadius.circular(53),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      Icon(Icons.search, color: AppColors.black, size: 24),
+                      const SizedBox(width: 8),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Search clinics, doctors, specialty...',
+                          style: FontHeading.bodySmall.copyWith(
+                            color: AppColors.customGray,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // ---- Filter Button ----
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.main_background_blue,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                onPressed: () {
+                  print('Filter button pressed');
+                },
+                icon: Icon(
+                  Icons.filter_list,
+                  color: AppColors.main_background_white,
+                  size: 26,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildClinicCard(Clinic clinic) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(4),
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade200,
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ---- Photo (87 x 87) with Bookmark Icon ----
+          // ---- Photo (87 x 87) with Bookmark + Rating Badge ----
           Stack(
             children: [
               ClipRRect(
@@ -233,21 +270,52 @@ class SearchResultsScreen extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
+              // ---- Bookmark Icon (Top Left) ----
               Positioned(
-                top: 6,
-                left: 6,
+                top: 8,
+                left: 8,
                 child: Container(
+                  width: 24,
+                  height: 24,
                   padding: const EdgeInsets.all(4),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(4)),
                   ),
                   child: Icon(
-                    clinic.isSaved ? Icons.bookmark : Icons.bookmark_border,
+                    Icons.bookmark,
                     color: clinic.isSaved
                         ? AppColors.main_background_blue
                         : AppColors.CustomgrayDark,
                     size: 16,
+                  ),
+                ),
+              ),
+              // ---- Rating Badge (Bottom Right) ----
+              Positioned(
+                bottom: 2,
+                right: 2,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(117),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        clinic.rating.toString(),
+                        style: FontHeading.caption.copyWith(
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(width: 2),
+                      Icon(Icons.star, color: Colors.yellow.shade600, size: 16),
+                    ],
                   ),
                 ),
               ),
@@ -264,7 +332,7 @@ class SearchResultsScreen extends StatelessWidget {
                   clinic.name,
                   style: FontHeading.body.copyWith(
                     color: Colors.black,
-                    fontSize: 18,
+                    fontSize: 20,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -284,7 +352,7 @@ class SearchResultsScreen extends StatelessWidget {
                         clinic.location,
                         style: FontHeading.bodySmall.copyWith(
                           color: AppColors.CustomgrayDark,
-                          fontSize: 16,
+                          fontSize: 18,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -293,43 +361,24 @@ class SearchResultsScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 2),
-                // ---- Specialty / Hours ----
+                // ---- Opening Hours (replaces specialty) ----
                 Row(
                   children: [
                     Icon(
-                      Icons.local_hospital_outlined,
+                      Icons.access_time_outlined,
                       color: AppColors.CustomgrayDark,
                       size: 16,
                     ),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        clinic.specialty,
+                        clinic.hours,
                         style: FontHeading.bodySmall.copyWith(
                           color: AppColors.CustomgrayDark,
-                          fontSize: 14,
+                          fontSize: 18,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                // ---- Rating (optional) ----
-                Row(
-                  children: [
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow.shade600,
-                      size: 14,
-                    ),
-                    const SizedBox(width: 2),
-                    Text(
-                      clinic.rating.toString(),
-                      style: FontHeading.bodySmall.copyWith(
-                        color: AppColors.CustomgrayDark,
-                        fontSize: 12,
                       ),
                     ),
                   ],
