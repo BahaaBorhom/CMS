@@ -293,10 +293,10 @@ class FilterScreen extends StatelessWidget {
                 // ---- "Clear rating" Button ----
                 TextButton(
                   onPressed: () {
-                    context.read<FilterCubit>().setRating(null);
+                    context.read<FilterCubit>().setRating(0);
                   },
                   child: Text(
-                    currentRating == null ? 'Any rating' : 'Clear rating',
+                    currentRating == 0 ? 'Any rating' : 'Clear rating',
                     style: FontHeading.bodySmall.copyWith(
                       color: AppColors.customGray,
                       decoration: TextDecoration.underline,
