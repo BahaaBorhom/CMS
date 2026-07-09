@@ -1065,12 +1065,6 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        Icon(
-                          Icons.access_time_outlined,
-                          color: AppColors.CustomgrayDark,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
                         Text(
                           item.timeVisited,
                           style: FontHeading.bodySmall.copyWith(
