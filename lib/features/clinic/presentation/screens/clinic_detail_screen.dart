@@ -143,51 +143,52 @@ class ClinicDetailScreen extends StatelessWidget {
                                 color: AppColors.main_background_white,
                                 borderRadius: BorderRadius.circular(117),
                               ),
-                              child: GestureDetector(
-                                onTap: () => Navigator.pop(context),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.arrow_back,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.arrow_back,
+                                    color: AppColors.black,
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Back',
+                                    style: FontHeading.bodySmall.copyWith(
                                       color: AppColors.black,
-                                      size: 16,
                                     ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      'Back',
-                                      style: FontHeading.bodySmall.copyWith(
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                        Container(
-                          height: 200,
-                          alignment: Alignment.bottomLeft,
-                          padding: const EdgeInsets.fromLTRB(16, 0, 12, 0),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.black.withOpacity(0),
-                                Colors.black.withOpacity(1),
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              stops: const [0.6, 1],
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(16)),
-                          ),
+                        IgnorePointer(
                           child: Container(
-                            width: MediaQuery.of(context).size.width - 90,
-                            child: Text(
-                              clinic.name,
-                              style: FontHeading.heading2,
-                              overflow: TextOverflow.fade,
+                            height: 200,
+                            alignment: Alignment.bottomLeft,
+                            padding: const EdgeInsets.fromLTRB(16, 0, 12, 0),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.black.withOpacity(0),
+                                  Colors.black.withOpacity(1),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: const [0.6, 1],
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(16),
+                              ),
+                            ),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width - 90,
+                              child: Text(
+                                clinic.name,
+                                style: FontHeading.heading2,
+                                overflow: TextOverflow.fade,
+                              ),
                             ),
                           ),
                         ),
