@@ -13,12 +13,61 @@ class ClinicDetailScreen extends StatelessWidget {
 
   const ClinicDetailScreen({super.key, required this.clinic});
 
-  // Clinic location (hardcoded for demo – replace with real data)
-  final LatLng _clinicLocation = const LatLng(33.5138, 36.2765);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // ============================================================
+      //  BOTTOM BUTTONS
+      // ============================================================
+      bottomSheet: BottomSheet(
+        enableDrag: false,
+        onClosing: () {},
+        builder: (context) => Container(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 50),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(8),
+              topRight: Radius.circular(8),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.customGray,
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Booking new appointment')),
+                    );
+                  },
+                  icon: const Icon(Icons.calendar_today, color: Colors.white),
+                  label: const Text(
+                    'Book an appointment',
+                    style: FontHeading.button,
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.main_background_blue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
@@ -40,7 +89,7 @@ class ClinicDetailScreen extends StatelessWidget {
                         Container(
                           height: 200,
                           width: double.infinity,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             image: DecorationImage(
                               image: AssetImage(Assets.assetsImagesReception),
                               fit: BoxFit.cover,
@@ -51,18 +100,25 @@ class ClinicDetailScreen extends StatelessWidget {
                             ),
                           ),
                         ),
+                        // ClipRRect(
+                        //   borderRadius: BorderRadius.circular(12),
+                        //   child: Container(
+                        //     width: double.infinity,
+                        //     height: 200,
+                        //     color: Colors.black26, // Adjust opacity as needed
+                        //   ),
+                        // ),
                         // ---- Status Badge (Top Right) ----
                         Positioned(
                           top: 30,
                           right: 10,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 2.5,
-                            ),
+                            width: 37,
+                            height: 37,
+                            padding: const EdgeInsets.all(6.5),
                             decoration: BoxDecoration(
                               color: AppColors.main_background_white,
-                              borderRadius: BorderRadius.circular(117),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Icon(
                               Icons.bookmark,
@@ -107,9 +163,22 @@ class ClinicDetailScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Positioned(
-                          bottom: 12,
-                          left: 16,
+                        Container(
+                          height: 200,
+                          alignment: Alignment.bottomLeft,
+                          padding: const EdgeInsets.fromLTRB(16, 0, 12, 0),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.black.withOpacity(0),
+                                Colors.black.withOpacity(1),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: const [0.6, 1],
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(16)),
+                          ),
                           child: Container(
                             width: MediaQuery.of(context).size.width - 90,
                             child: Text(
@@ -156,7 +225,7 @@ class ClinicDetailScreen extends StatelessWidget {
                     //  About text
                     // ============================================================
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.fromLTRB(24, 16, 0, 4),
                       child: Text(
                         'About',
                         style: FontHeading.heading3.copyWith(
@@ -165,7 +234,7 @@ class ClinicDetailScreen extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       child: Text(
                         'Lorem ipsum dolor sit amet consectetur. Ultricies magna vitae faucibus viverra facilisis dolor. Facilisi dui nunc arcu vel. Nascetur sed et auctor auctor a arcu cursus lectus. In quam justo suscipit purus vulputate habitant. Tempor.',
                         style: FontHeading.caption.copyWith(
@@ -173,12 +242,12 @@ class ClinicDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-
+                    const SizedBox(height: 32),
                     // ============================================================
-                    //  CLINIC NAME + LOCATION + MAP BUTTON
+                    //  LOCATION + MAP BUTTON
                     // ============================================================
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -205,7 +274,7 @@ class ClinicDetailScreen extends StatelessWidget {
                                     const SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
-                                        'Damascus, Al-Mazzeh', // Replace with real location
+                                        clinic.location,
                                         style: FontHeading.bodySmall.copyWith(
                                           color: AppColors.CustomgrayDark,
                                         ),
@@ -265,13 +334,16 @@ class ClinicDetailScreen extends StatelessWidget {
                           width: double.infinity,
                           child: GoogleMap(
                             initialCameraPosition: CameraPosition(
-                              target: _clinicLocation,
+                              target: LatLng(clinic.latitude, clinic.longitude),
                               zoom: 15.0,
                             ),
                             markers: {
                               Marker(
                                 markerId: const MarkerId('clinic'),
-                                position: _clinicLocation,
+                                position: LatLng(
+                                  clinic.latitude,
+                                  clinic.longitude,
+                                ),
                                 infoWindow: const InfoWindow(
                                   title: 'Clinic Location',
                                 ),
@@ -291,51 +363,199 @@ class ClinicDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 32),
                     // ============================================================
-                    //  BOTTOM BUTTONS
+                    //  CONTACT INFO
                     // ============================================================
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 50),
-                      color: Colors.transparent,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Booking new appointment'),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.calendar_today,
-                                color: Colors.white,
-                              ),
-                              label: const Text(
-                                'Book an appointment',
-                                style: FontHeading.button,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.main_background_blue,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 14,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 16, 0, 4),
+                      child: Text(
+                        'Contact info',
+                        style: FontHeading.heading3.copyWith(
+                          color: AppColors.black,
+                        ),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: AppColors.customGray.withOpacity(0.1),
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.phone_outlined,
+                              color: AppColors.main_background_blue,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              "0900 000 000",
+                              // clinic.contactnumber,
+                              style: FontHeading.body.copyWith(
+                                color: AppColors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // ============================================================
+                    //  OPENING HOURS
+                    // ============================================================
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: AppColors.main_background_white,
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.access_time_outlined,
+                              color: AppColors.main_background_blue,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              clinic.hours,
+                              style: FontHeading.body.copyWith(
+                                color: AppColors.CustomgrayDark,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // ============================================================
+                    //  DOCTORS LIST
+                    // ============================================================
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 16, 0, 4),
+                      child: Text(
+                        'Doctors',
+                        style: FontHeading.heading3.copyWith(
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 300, // Give it a fixed height or use Expanded
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: 6,
+                        itemBuilder: (context, index) {
+                          return _DoctorCard();
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 150), // Add some space at the bottom
                   ],
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _DoctorCard() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        height: 80,
+        decoration: BoxDecoration(
+          color: AppColors.customGray.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            // ---- Doctor Photo (with fallback) ----
+            SizedBox(
+              width: 62,
+              height: 62,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  Assets.assetsImagesDoctorFolanAlfolani,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    // Fallback if image is missing
+                    return Container(
+                      color: AppColors.customGray,
+                      child: const Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
+            // ---- Doctor Info (no Expanded needed now) ----
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Dr. Folan Al-Folani (Heart)',
+                    style: FontHeading.heading4.copyWith(color: Colors.black),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '15 years of experience',
+                        style: FontHeading.bodySmall.copyWith(
+                          color: AppColors.CustomgrayDark,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 1,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.main_background_white,
+                          borderRadius: BorderRadius.all(Radius.circular(117)),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              '4.5', // ✅ Hardcoded dummy rating (no clinic needed)
+                              style: FontHeading.caption.copyWith(
+                                color: AppColors.black,
+                              ),
+                            ),
+                            const SizedBox(width: 2),
+                            Icon(
+                              Icons.star,
+                              color: Colors.yellow.shade600,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
