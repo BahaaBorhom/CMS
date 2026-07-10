@@ -143,22 +143,25 @@ class ClinicDetailScreen extends StatelessWidget {
                                 color: AppColors.main_background_white,
                                 borderRadius: BorderRadius.circular(117),
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.arrow_back,
-                                    color: AppColors.black,
-                                    size: 16,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Back',
-                                    style: FontHeading.bodySmall.copyWith(
+                              child: GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.arrow_back,
                                       color: AppColors.black,
+                                      size: 16,
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Back',
+                                      style: FontHeading.bodySmall.copyWith(
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
