@@ -1,3 +1,4 @@
+import 'package:cms/features/map/presentation/screens/map_screen.dart';
 import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MapTestScreen(),
+      home: const MapScreen(),
     );
   }
 }

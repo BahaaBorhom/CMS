@@ -44,9 +44,7 @@ class _MapTestScreenState extends State<MapTestScreen> {
         title: clinic.name,
         snippet: '${clinic.specialty} - ${clinic.location}',
       ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(
-        BitmapDescriptor.hueBlue,
-      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
     );
     setState(() {
       _markers.add(marker);
@@ -54,55 +52,53 @@ class _MapTestScreenState extends State<MapTestScreen> {
   }
 
   void _addSampleMarkers() {
-  final sampleClinics = [
-    {
-      'id': '1',
-      'name': 'Al-Mazzeh Medical Center',
-      'lat': 33.5138,
-      'lng': 36.2765,
-      'snippet': 'General Medicine - Damascus, Al-Mazzeh',
-    },
-    {
-      'id': '2',
-      'name': 'Heart Care Clinic',
-      'lat': 33.5200,
-      'lng': 36.2800,
-      'snippet': 'Cardiology - Damascus, Al-Muhafaza',
-    },
-    {
-      'id': '3',
-      'name': 'Al-Mazzeh Dental Center',
-      'lat': 33.5160,
-      'lng': 36.2780,
-      'snippet': 'Dentist - Damascus, Al-Mazzeh',
-    },
-  ];
+    final sampleClinics = [
+      {
+        'id': '1',
+        'name': 'Al-Mazzeh Medical Center',
+        'lat': 33.5138,
+        'lng': 36.2765,
+        'snippet': 'General Medicine - Damascus, Al-Mazzeh',
+      },
+      {
+        'id': '2',
+        'name': 'Heart Care Clinic',
+        'lat': 33.5200,
+        'lng': 36.2800,
+        'snippet': 'Cardiology - Damascus, Al-Muhafaza',
+      },
+      {
+        'id': '3',
+        'name': 'Al-Mazzeh Dental Center',
+        'lat': 33.5160,
+        'lng': 36.2780,
+        'snippet': 'Dentist - Damascus, Al-Mazzeh',
+      },
+    ];
 
-  for (var c in sampleClinics) {
-    final marker = Marker(
-      markerId: MarkerId(c['id'] as String),           // ✅ cast to String
-      position: LatLng(
-        c['lat'] as double,                            // ✅ cast to double
-        c['lng'] as double,                            // ✅ use 'lng' not 'long'
-      ),
-      infoWindow: InfoWindow(
-        title: c['name'] as String?,                   // ✅ cast to String?
-        snippet: c['snippet'] as String?,              // ✅ cast to String?
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(
-        BitmapDescriptor.hueBlue,
-      ),
-    );
-    _markers.add(marker);
+    for (var c in sampleClinics) {
+      final marker = Marker(
+        markerId: MarkerId(c['id'] as String), // ✅ cast to String
+        position: LatLng(
+          c['lat'] as double, // ✅ cast to double
+          c['lng'] as double, // ✅ use 'lng' not 'long'
+        ),
+        infoWindow: InfoWindow(
+          title: c['name'] as String?, // ✅ cast to String?
+          snippet: c['snippet'] as String?, // ✅ cast to String?
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      );
+      _markers.add(marker);
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.clinic != null ? 'Clinic Location' : 'Nearby Clinics',
+          'Clinic Location',
           style: const TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
