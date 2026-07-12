@@ -12,6 +12,7 @@ import 'package:cms/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/home_state.dart';
 import 'package:cms/features/home/presentation/cubit/navigation_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/navigation_state.dart';
+import 'package:cms/features/map/presentation/screens/map_screen.dart';
 import 'package:cms/features/search/presentation/screens/filter_screen.dart';
 import 'package:cms/features/search/presentation/screens/search_screen.dart';
 import 'package:cms/injection_container.dart';
@@ -66,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                     index: navState.selectedIndex,
                     children: [
                       _buildHomeTab(context),
-                      _buildPlaceholderTab('Map', Icons.map),
+                      _buildMapTap(context),
                       _buildPlaceholderTab('Saved', Icons.bookmark),
                       _buildPlaceholderTab('Books', Icons.book),
                       _buildPlaceholderTab('Profile', Icons.person),
@@ -1149,5 +1150,9 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildMapTap(BuildContext context) {
+    return MapScreen();
   }
 }

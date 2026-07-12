@@ -10,6 +10,7 @@ import 'package:cms/features/auth/presentation/screens/on_bording_screen.dart';
 import 'package:cms/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 import 'package:cms/features/home/presentation/screens/home_screen.dart';
+import 'package:cms/features/map/presentation/screens/map_screen.dart';
 import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
 import 'package:cms/features/search/presentation/screens/filter_screen.dart';
 import 'package:cms/features/search/presentation/screens/search_screen.dart';
@@ -84,6 +85,9 @@ class MyApp extends StatelessWidget {
             );
           case FilterScreen.routeName:
             return MaterialPageRoute(builder: (_) => const FilterScreen());
+          case MapScreen.routeName:
+            return MaterialPageRoute(builder: (_) => const MapScreen());
+
           default:
             return MaterialPageRoute(
               builder: (_) =>
