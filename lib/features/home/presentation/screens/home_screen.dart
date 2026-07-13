@@ -335,12 +335,12 @@ class HomeScreen extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-              //  Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => const SearchScreen(),
-              //     ),
-              //   );
+                //  Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => const SearchScreen(),
+                //     ),
+                //   );
               },
               child: Container(
                 height: 48,
@@ -811,6 +811,28 @@ class HomeScreen extends StatelessWidget {
                             width: 215,
                             height: 135,
                             fit: BoxFit.cover,
+                          ),
+                        ),
+                        IgnorePointer(
+                          child: Container(
+                            height: 135,
+                            alignment: Alignment.bottomLeft,
+                            padding: const EdgeInsets.fromLTRB(16, 0, 12, 0),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.black.withOpacity(0),
+                                  Colors.black.withOpacity(1),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: const [0.6, 1],
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(16),
+                              ),
+                            ),
+                            child: Container(),
                           ),
                         ),
                         Positioned(
