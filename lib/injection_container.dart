@@ -4,6 +4,7 @@ import 'package:cms/features/auth/data/data_sources/local/language_data_source.d
 import 'package:cms/features/auth/data/repositories/language_repository_imp.dart';
 import 'package:cms/features/auth/domain/use_cases/change_language_use_case.dart';
 import 'package:cms/features/auth/inject_auth.dart';
+import 'package:cms/features/booking/inject_booking.dart';
 import 'package:cms/features/clinic/inject_clinic.dart';
 import 'package:cms/features/home/inject_home.dart';
 import 'package:cms/features/map/inject_map.dart';
@@ -55,4 +56,5 @@ Future<void> init() async {
   injectClinic();
   injectMap();
   injectSearch();
+  injectBooking();
 }
