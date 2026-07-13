@@ -7,6 +7,7 @@ import 'package:cms/core/entities/clinic.dart';
 import 'package:cms/core/entities/history.dart';
 import 'package:cms/core/theme/app_colors.dart';
 import 'package:cms/features/appointment/presentation/screens/appointment_detail_screen.dart';
+import 'package:cms/features/booking/presentation/screens/booking_screen.dart';
 import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 import 'package:cms/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/home_state.dart';
@@ -69,7 +70,7 @@ class HomeScreen extends StatelessWidget {
                       _buildHomeTab(context),
                       _buildMapTap(context),
                       _buildSavedTab(context),
-                      _buildPlaceholderTab('Books', Icons.book),
+                      _buildBookingTap(context),
                       _buildPlaceholderTab('Profile', Icons.person),
                     ],
                   ),
@@ -109,7 +110,9 @@ class HomeScreen extends StatelessWidget {
                     if (state.appointments.isNotEmpty) ...[
                       _buildSectionHeader(
                         title: 'Upcoming appointments',
-                        onSeeAll: () {},
+                        onSeeAll: () {
+                          context.read<NavigationCubit>().selectTab(3);
+                        },
                       ),
                       const SizedBox(height: 12),
                       _buildAppointmentsSlider(state.appointments),
@@ -1456,5 +1459,8 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildMapTap(BuildContext context) {
     return MapScreen();
+  }
+  Widget _buildBookingTap(BuildContext context) {
+    return BookingScreen();
   }
 }

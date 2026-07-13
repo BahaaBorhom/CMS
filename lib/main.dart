@@ -8,6 +8,7 @@ import 'package:cms/features/auth/presentation/screens/forgot_password_screen.da
 import 'package:cms/features/auth/presentation/screens/otp_screen.dart';
 import 'package:cms/features/auth/presentation/screens/on_bording_screen.dart';
 import 'package:cms/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:cms/features/booking/presentation/screens/booking_screen.dart';
 import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 import 'package:cms/features/home/presentation/screens/home_screen.dart';
 import 'package:cms/features/map/presentation/screens/map_screen.dart';
@@ -15,9 +16,6 @@ import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
 import 'package:cms/features/search/presentation/screens/filter_screen.dart';
 import 'package:cms/features/search/presentation/screens/search_screen.dart';
 import 'package:cms/features/search/presentation/screens/searchresult_screen.dart';
-// import 'package:cms/features/appointment/presentation/screens/appointment_detail_screen.dart';
-// import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
-// import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cms/injection_container.dart';
 
@@ -87,7 +85,8 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(builder: (_) => const FilterScreen());
           case MapScreen.routeName:
             return MaterialPageRoute(builder: (_) => const MapScreen());
-
+          case BookingScreen.routeName:
+            return MaterialPageRoute(builder: (_) => const BookingScreen());
           default:
             return MaterialPageRoute(
               builder: (_) =>
