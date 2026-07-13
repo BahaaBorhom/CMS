@@ -819,6 +819,28 @@ class HomeScreen extends StatelessWidget {
                             fit: BoxFit.cover,
                           ),
                         ),
+                        IgnorePointer(
+                          child: Container(
+                            height: 135,
+                            alignment: Alignment.bottomLeft,
+                            padding: const EdgeInsets.fromLTRB(16, 0, 12, 0),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.black.withOpacity(0),
+                                  Colors.black.withOpacity(1),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: const [0.6, 1],
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(16),
+                              ),
+                            ),
+                            child: Container(),
+                          ),
+                        ),
                         Positioned(
                           top: 8,
                           right: 8,
