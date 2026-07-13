@@ -5,6 +5,7 @@ class Appointment {
   final String clinicName;
   final String date;
   final String time;
+  final String status;
   final String? followUp;
 
   Appointment({
@@ -14,6 +15,7 @@ class Appointment {
     required this.clinicName,
     required this.date,
     required this.time,
+    required this.status,
     this.followUp,
   });
 }
