@@ -68,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       _buildHomeTab(context),
                       _buildMapTap(context),
-                      _buildPlaceholderTab('Saved', Icons.bookmark),
+                      _buildSavedTab(context),
                       _buildPlaceholderTab('Books', Icons.book),
                       _buildPlaceholderTab('Profile', Icons.person),
                     ],
@@ -125,7 +125,9 @@ class HomeScreen extends StatelessWidget {
 
                     _buildSectionHeaderWithIcon(
                       title: 'Saved clinics',
-                      onSeeAll: () {},
+                      onSeeAll: () {
+                        context.read<NavigationCubit>().selectTab(2);
+                      },
                       icon: Icons.bookmark,
                     ),
                     const SizedBox(height: 12),
@@ -1169,6 +1171,284 @@ class HomeScreen extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSavedTab(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.main_background_white,
+      body: BlocSelector<HomeCubit, HomeState, List<Clinic>>(
+        selector: (state) => state.clinics.where((c) => c.isSaved).toList(),
+        builder: (context, savedClinics) {
+          return Column(
+            children: [
+              // ---- Blue Header ----
+              _buildBlueHeader(context),
+              const SizedBox(height: 12),
+              // ---- Search Bar ----
+              _buildSearchBar(context),
+              const SizedBox(height: 16),
+              // ---- Body ----
+              if (savedClinics.isEmpty)
+                _buildSavedEmptyState(context)
+              else
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: savedClinics.length,
+                    itemBuilder: (context, index) {
+                      final clinic = savedClinics[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _buildSavedClinicCard(context, clinic),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSavedEmptyState(BuildContext context) {
+    return Expanded(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.bookmark_border, size: 80, color: AppColors.customGray),
+            const SizedBox(height: 16),
+            Text(
+              'No saved clinics yet',
+              style: FontHeading.heading1.copyWith(
+                color: Colors.black,
+                fontSize: 24,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Tap the bookmark icon on any clinic\nto save it here.',
+              style: FontHeading.body.copyWith(color: AppColors.customGray),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSavedClinicCard(BuildContext context, Clinic clinic) {
+    return RepaintBoundary(
+      child: GestureDetector(
+        onTap: () {
+          // Navigate to ClinicDetailScreen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ClinicDetailScreen(clinic: clinic),
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: double.infinity, // ✅ Full width
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade200,
+                  blurRadius: 6,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ---- Photo (Full width, 180 height) ----
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                      child: Image.asset(
+                        Assets.assetsImagesClinicPlaceholder,
+                        width: double.infinity,
+                        height: 180,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    // ---- Gradient Overlay ----
+                    IgnorePointer(
+                      child: Container(
+                        height: 180,
+                        alignment: Alignment.bottomLeft,
+                        padding: const EdgeInsets.fromLTRB(16, 0, 12, 0),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black.withOpacity(0),
+                              Colors.black.withOpacity(1),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: const [0.6, 1],
+                          ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(16),
+                          ),
+                        ),
+                        child: Container(),
+                      ),
+                    ),
+                    // ---- Bookmark Icon ----
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: Icon(
+                          Icons.bookmark,
+                          color: clinic.isSaved
+                              ? AppColors.main_background_blue
+                              : AppColors.CustomgrayDark,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    // ---- Rating Badge ----
+                    Positioned(
+                      bottom: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(117),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              clinic.rating.toString(),
+                              style: FontHeading.caption.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.star,
+                              color: Colors.yellow.shade600,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // ---- Specialty Badge ----
+                    Positioned(
+                      bottom: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(117),
+                        ),
+                        child: Text(
+                          clinic.specialty,
+                          style: FontHeading.caption.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // ---- Clinic Name ----
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                  child: Text(
+                    clinic.name,
+                    style: FontHeading.body.copyWith(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                // ---- Location ----
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        color: AppColors.CustomgrayDark,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          clinic.location,
+                          style: FontHeading.bodySmall.copyWith(
+                            color: AppColors.CustomgrayDark,
+                            fontSize: 14,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // ---- Hours ----
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.access_time_outlined,
+                        color: AppColors.CustomgrayDark,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          clinic.hours,
+                          style: FontHeading.bodySmall.copyWith(
+                            color: AppColors.CustomgrayDark,
+                            fontSize: 14,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
