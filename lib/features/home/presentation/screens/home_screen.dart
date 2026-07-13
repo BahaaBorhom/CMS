@@ -139,7 +139,9 @@ class HomeScreen extends StatelessWidget {
 
                     _buildSectionHeader(
                       title: 'Visit history',
-                      onSeeAll: () {},
+                      onSeeAll: () {
+                        context.read<NavigationCubit>().selectTab(3);
+                      },
                     ),
                     const SizedBox(height: 12),
                     ..._buildHistory(state.history),
@@ -1460,6 +1462,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildMapTap(BuildContext context) {
     return MapScreen();
   }
+
   Widget _buildBookingTap(BuildContext context) {
     return BookingScreen();
   }
