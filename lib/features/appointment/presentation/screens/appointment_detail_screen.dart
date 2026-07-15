@@ -2,6 +2,7 @@ import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/entities/appointment.dart';
 import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/features/booking/presentation/screens/booking_form_screen.dart';
 import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -325,7 +326,8 @@ class AppointmentDetailScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => MapTestScreen(
-                                        clinic: null, // Pass clinic if available
+                                        clinic:
+                                            null, // Pass clinic if available
                                       ),
                                     ),
                                   );
@@ -505,10 +507,9 @@ class AppointmentDetailScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Booking new appointment'),
-                            ),
+                        Navigator.pushNamed(
+                            context,
+                            BookingFormScreen.routeName,
                           );
                         },
                         icon: const Icon(
@@ -598,10 +599,9 @@ class AppointmentDetailScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Request another time'),
-                            ),
+                          Navigator.pushNamed(
+                            context,
+                            BookingFormScreen.routeName,
                           );
                         },
                         style: ElevatedButton.styleFrom(

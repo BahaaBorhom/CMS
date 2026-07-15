@@ -2,6 +2,7 @@
 import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/features/booking/presentation/screens/booking_form_screen.dart';
 import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
 import 'package:cms/core/entities/clinic.dart';
 import 'package:flutter/material.dart';
@@ -45,9 +46,10 @@ class ClinicDetailScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Booking new appointment')),
-                    );
+                    Navigator.pushNamed(
+                            context,
+                            BookingFormScreen.routeName,
+                          );
                   },
                   icon: const Icon(Icons.calendar_today, color: Colors.white),
                   label: const Text(

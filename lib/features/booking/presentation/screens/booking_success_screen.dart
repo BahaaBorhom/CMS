@@ -1,6 +1,7 @@
-import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/features/booking/presentation/screens/booking_screen.dart';
+import 'package:cms/features/home/presentation/cubit/navigation_cubit.dart';
 import 'package:flutter/material.dart';
 
 class BookingSuccessScreen extends StatelessWidget {
@@ -110,7 +111,13 @@ class BookingSuccessScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(24),
             ),
             child: GestureDetector(
-              onTap: () => Navigator.pop(context),
+              onTap:
+                  () => // ✅ Go back to home, clearing everything else
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/home',
+                    (route) => false, // Removes all previous routes
+                  ),
               child: Row(
                 children: [
                   Icon(Icons.arrow_back, color: Colors.black, size: 16),
@@ -164,8 +171,11 @@ class BookingSuccessScreen extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () {
-                // Navigate to My Appointments
-                // Navigator.pushNamed(context, '/my-appointments');
+                Navigator.pushNamed(
+                  context,
+                  BookingScreen.routeName, // '/booking'
+                  // (route) => false,
+                );
               },
               icon: const Icon(
                 Icons.calendar_today,
@@ -192,8 +202,12 @@ class BookingSuccessScreen extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // Navigate back to home
-                Navigator.popUntil(context, (route) => route.isFirst);
+                // ✅ Go back to home, clearing everything else
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/home',
+                  (route) => false, // Removes all previous routes
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.main_background_blue.withValues(
