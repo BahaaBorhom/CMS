@@ -1,3 +1,4 @@
+import 'package:cms/features/booking/presentation/screens/booking_form_screen.dart';
 import 'package:cms/features/booking/presentation/screens/booking_screen.dart';
 import 'package:cms/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const BookingScreen(),
+      home: const BookingFormScreen(),
     );
   }
 }
