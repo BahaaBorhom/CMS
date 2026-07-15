@@ -14,6 +14,7 @@ import 'package:cms/features/home/presentation/cubit/home_state.dart';
 import 'package:cms/features/home/presentation/cubit/navigation_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/navigation_state.dart';
 import 'package:cms/features/map/presentation/screens/map_screen.dart';
+import 'package:cms/features/profile/presentation/screens/profile_screen.dart';
 import 'package:cms/features/search/presentation/screens/filter_screen.dart';
 import 'package:cms/features/search/presentation/screens/search_screen.dart';
 import 'package:cms/injection_container.dart';
@@ -71,7 +72,7 @@ class HomeScreen extends StatelessWidget {
                       _buildMapTap(context),
                       _buildSavedTab(context),
                       _buildBookingTap(context),
-                      _buildPlaceholderTab('Profile', Icons.person),
+                      _buildProfileTap(context),
                     ],
                   ),
                 ),
@@ -153,33 +154,6 @@ class HomeScreen extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-
-  // ============================================================
-  //  PLACEHOLDER TABS
-  // ============================================================
-  Widget _buildPlaceholderTab(String title, IconData icon) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 64, color: AppColors.customGray),
-            const SizedBox(height: 16),
-            Text(
-              '$title Screen',
-              style: FontHeading.heading1.copyWith(color: AppColors.customGray),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Coming soon...',
-              style: FontHeading.body.copyWith(color: AppColors.customGray),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -1465,5 +1439,9 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildBookingTap(BuildContext context) {
     return BookingScreen();
+  }
+
+  Widget _buildProfileTap(BuildContext context) {
+    return ProfileScreen();
   }
 }
