@@ -8,6 +8,7 @@ import 'package:cms/features/booking/inject_booking.dart';
 import 'package:cms/features/clinic/inject_clinic.dart';
 import 'package:cms/features/home/inject_home.dart';
 import 'package:cms/features/map/inject_map.dart';
+import 'package:cms/features/profile/inject_profile.dart';
 import 'package:cms/features/search/inject_search.dart';
 // import 'package:cms/features/home/inject_home.dart';
 import 'package:get_it/get_it.dart';
@@ -57,4 +58,5 @@ Future<void> init() async {
   injectMap();
   injectSearch();
   injectBooking();
+  injectProfile();
 }
