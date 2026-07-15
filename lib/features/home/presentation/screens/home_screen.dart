@@ -14,6 +14,7 @@ import 'package:cms/features/home/presentation/cubit/home_state.dart';
 import 'package:cms/features/home/presentation/cubit/navigation_cubit.dart';
 import 'package:cms/features/home/presentation/cubit/navigation_state.dart';
 import 'package:cms/features/map/presentation/screens/map_screen.dart';
+import 'package:cms/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:cms/features/profile/presentation/screens/profile_screen.dart';
 import 'package:cms/features/search/presentation/screens/filter_screen.dart';
 import 'package:cms/features/search/presentation/screens/search_screen.dart';
@@ -121,7 +122,9 @@ class HomeScreen extends StatelessWidget {
                     ],
 
                     if (state.alerts.isNotEmpty) ...[
-                      _buildSectionHeader(title: 'Alerts', onSeeAll: () {}),
+                      _buildSectionHeader(title: 'Alerts', onSeeAll: () {
+                        Navigator.pushNamed(context, NotificationsScreen.routeName);
+                      }),
                       const SizedBox(height: 12),
                       ..._buildAlerts(state.alerts),
                       const SizedBox(height: 24),
@@ -294,7 +297,9 @@ class HomeScreen extends StatelessWidget {
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, NotificationsScreen.routeName);
+                    },
                     icon: const Icon(
                       Icons.notifications_outlined,
                       color: AppColors.main_background_blue,

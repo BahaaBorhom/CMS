@@ -13,6 +13,7 @@ import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.da
 import 'package:cms/features/home/presentation/screens/home_screen.dart';
 import 'package:cms/features/map/presentation/screens/map_screen.dart';
 import 'package:cms/features/map/presentation/screens/map_test_screen.dart';
+import 'package:cms/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:cms/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:cms/features/profile/presentation/screens/profile_screen.dart';
 import 'package:cms/features/search/presentation/screens/filter_screen.dart';
@@ -93,6 +94,10 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute(builder: (_) => const ProfileScreen());
           case EditProfileScreen.routeName:
             return MaterialPageRoute(builder: (_) => const EditProfileScreen());
+          case NotificationsScreen.routeName:
+            return MaterialPageRoute(
+              builder: (_) => const NotificationsScreen(),
+            );
           default:
             return MaterialPageRoute(
               builder: (_) =>

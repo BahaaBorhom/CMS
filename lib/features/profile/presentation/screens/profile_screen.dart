@@ -1,6 +1,7 @@
 import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:cms/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -99,7 +100,9 @@ class ProfileScreen extends StatelessWidget {
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, NotificationsScreen.routeName);
+                    },
                     icon: const Icon(
                       Icons.notifications_outlined,
                       color: AppColors.main_background_blue,

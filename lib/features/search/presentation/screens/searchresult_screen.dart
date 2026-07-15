@@ -3,6 +3,7 @@ import 'package:cms/core/constants/assets.dart';
 import 'package:cms/core/constants/font_heading.dart';
 import 'package:cms/core/entities/clinic.dart';
 import 'package:cms/core/theme/app_colors.dart';
+import 'package:cms/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:cms/features/search/presentation/cubit/searchresult_cubit.dart';
 import 'package:cms/features/search/presentation/cubit/searchresult_state.dart';
 import 'package:cms/features/search/presentation/screens/filter_screen.dart';
@@ -161,7 +162,9 @@ class SearchResultsScreen extends StatelessWidget {
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, NotificationsScreen.routeName);
+                    },
                     icon: const Icon(
                       Icons.notifications_outlined,
                       color: AppColors.main_background_blue,

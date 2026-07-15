@@ -5,6 +5,7 @@ import 'package:cms/core/entities/appointment.dart';
 import 'package:cms/core/theme/app_colors.dart';
 import 'package:cms/features/booking/presentation/cubit/booking_cubit.dart';
 import 'package:cms/features/booking/presentation/cubit/booking_state.dart';
+import 'package:cms/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:cms/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -129,7 +130,9 @@ class BookingScreen extends StatelessWidget {
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, NotificationsScreen.routeName);
+                    },
                     icon: const Icon(
                       Icons.notifications_outlined,
                       color: AppColors.main_background_blue,
