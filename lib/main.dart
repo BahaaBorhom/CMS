@@ -8,7 +8,9 @@ import 'package:cms/features/auth/presentation/screens/forgot_password_screen.da
 import 'package:cms/features/auth/presentation/screens/otp_screen.dart';
 import 'package:cms/features/auth/presentation/screens/on_bording_screen.dart';
 import 'package:cms/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:cms/features/booking/presentation/screens/booking_form_screen.dart';
 import 'package:cms/features/booking/presentation/screens/booking_screen.dart';
+import 'package:cms/features/booking/presentation/screens/booking_success_screen.dart';
 import 'package:cms/features/clinic/presentation/screens/clinic_detail_screen.dart';
 import 'package:cms/features/home/presentation/screens/home_screen.dart';
 import 'package:cms/features/map/presentation/screens/map_screen.dart';
@@ -97,6 +99,12 @@ class MyApp extends StatelessWidget {
           case NotificationsScreen.routeName:
             return MaterialPageRoute(
               builder: (_) => const NotificationsScreen(),
+            );
+          case BookingFormScreen.routeName:
+            return MaterialPageRoute(builder: (_) => const BookingFormScreen());
+          case BookingSuccessScreen.routeName:
+            return MaterialPageRoute(
+              builder: (_) => const BookingSuccessScreen(),
             );
           default:
             return MaterialPageRoute(
